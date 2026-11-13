@@ -1,0 +1,32 @@
+display_information:
+  name: coLEX
+  description: Regulatory change agent for PayRo — flags relevant laws, notifies teams, asks for approvals.
+  background_color: "#1d2b4f"
+features:
+  bot_user:
+    display_name: coLEX
+    always_online: true
+  slash_commands:
+    - command: /colex
+      description: coLEX status and controls
+      usage_hint: status | why <item> | pause | resume
+      should_escape: false
+oauth_config:
+  scopes:
+    bot:
+      - chat:write
+      - chat:write.public
+      - channels:read
+      - users:read
+      - commands
+      - app_mentions:read
+      - im:write
+settings:
+  event_subscriptions:
+    bot_events:
+      - app_mention
+  interactivity:
+    is_enabled: true
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  token_rotation_enabled: false
