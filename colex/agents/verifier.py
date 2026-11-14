@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Any
 
 from colex import db
+from colex.map import registers
 from colex.runtime import audit, store
 
 
@@ -46,5 +47,12 @@ def run(ctx, law, items: list[dict[str, Any]], deps) -> dict[str, Any]:
                              "merged": False} for w in changes],
         "checks": {"every_item_grounded": not ungrounded, "nothing_merged": True},
     }
+    registers.record_obligations(run_id, law.celex, items)
+    impact = store.step_row(run_id, "main:IMPACT")
+    summary["context"] = store.get_blob(impact["output_ref"]).get("metrics", {}) if impact else {}
+    register = store.step_row(run_id, "main:REGISTER")
+    if register:
+        reg = store.get_blob(register["output_ref"])
+        summary["dora_register"] = {"rows": reg["rows"], "missing_clauses": reg["gaps"], "csv": reg["csv"]}
     ctx.emit("rationale", f"Verified: {len(items)} item(s), {len(ungrounded)} without evidence, nothing merged")
     return summary

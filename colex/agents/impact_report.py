@@ -27,12 +27,14 @@ class Reporting:
                 self.ctx.emit("escalation", f"Dropped an item for {uri} after {count} failed attempts: {exc}")
                 return {"error": f"rejected and dropped: {exc}. Do not report this item again."}
             return {"error": f"rejected: {exc}"}
-        for item in self.items:   # the same place reported twice is one item
-            same = (item["resource_uri"], item["action"], item["article_id"]) == \
-                   (uri, fields["action"], fields["article_id"])
-            if same and item["lines"]["start"] <= fields["lines"]["end"] \
-                    and fields["lines"]["start"] <= item["lines"]["end"]:
-                return {"ok": True, "item_id": item["item_id"], "note": "already reported"}
+        for item in self.items:   # one item per resource: one owner, one to-do, one change request
+            if item["resource_uri"] == uri and item["action"] == fields["action"]:
+                start = min(item["lines"]["start"], fields["lines"]["start"])
+                end = max(item["lines"]["end"], fields["lines"]["end"])
+                if end - start <= 39:
+                    item["lines"] = {"start": start, "end": end}
+                return {"ok": True, "item_id": item["item_id"],
+                        "note": "this resource is already reported; the lines were added to that item"}
         card = self.tools.card(uri)
         item = ImpactItem(item_id=f"{self.prefix}i{len(self.items) + 1}", owner_team=card["owner_team"], **fields)
         self.items.append({**item.model_dump(mode="json"), "breadcrumbs": card["primary_path"],

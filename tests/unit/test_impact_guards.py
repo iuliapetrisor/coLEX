@@ -63,7 +63,8 @@ def test_grounded_item_is_accepted_and_owner_comes_from_the_map(d):
     item = d.items[0]
     assert (item["owner_team"], item["citation"], item["deadline"]) == \
            ("product", f"CELEX:32024R0886 {ART}", "2027-01-09")
-    assert d.call("report_impact", GOOD)["note"] == "already reported" and len(d.items) == 1
+    again = d.call("report_impact", {**GOOD, "start": 8, "end": 9, "quote": "standard: 0.50"})
+    assert "already reported" in again["note"] and again["item_id"] == "i1" and len(d.items) == 1
 
 
 @pytest.mark.parametrize("change, reason", [
@@ -81,6 +82,34 @@ def test_ungrounded_items_are_rejected_with_a_reason(d, change, reason):
     _located(d)
     out = d.call("report_impact", {**GOOD, **change})
     assert re.search(reason, out["error"]) and d.items == []
+
+
+def test_quote_that_copied_the_line_number_prefixes_is_accepted_without_them(d):
+    """Regression from a live run: correct findings were dropped because the model quoted '7: text'."""
+    _located(d)
+    quote = "7:   eur:\n8:     standard: 0.50\n9:     instant: 1.50"
+    assert d.call("report_impact", {**GOOD, "quote": quote})["ok"]
+    assert d.items[0]["evidence"] == "eur: standard: 0.50 instant: 1.50"
+    assert "not verbatim" in d.call("report_impact", {**GOOD, "start": 7, "end": 8,
+                                                      "quote": "7: instant: 9.99"})["error"]
+
+
+def test_contract_review_needs_an_article_about_contracts_and_a_gap_in_the_map(d):
+    """Regression from a live run: contract reviews were reported under an article that never mentions contracts."""
+    ICT = "PayRo › Legal & Compliance › Contracts › ICT provider contracts"
+    aws = "onedrive://legal/contracts/cloud-hosting-aws.md"
+    _located(d, ICT, aws, 3, 8)
+    review = {**GOOD, "resource_uri": aws, "start": 3, "end": 8, "action": "CONTRACT_REVIEW",
+              "quote": "Parties: PayRo SRL and Amazon Web Services EMEA SARL"}
+    assert "does not speak about contracts" in d.call("report_impact", review)["error"]
+    d.law = watcher.parse(settings.FEED / "32022R2554.md")
+    d.flagged = ["Art. 30"]
+    assert "no missing Art. 30 clause" in d.call("report_impact", {**review, "article_id": "Art. 30"})["error"]
+    sms = "onedrive://legal/contracts/sms-otp-smsnord.md"
+    _located(d, ICT, sms, 3, 8)
+    ok = d.call("report_impact", {**review, "resource_uri": sms, "article_id": "Art. 30",
+                                  "quote": "Parties: PayRo SRL and SMSNord Telecom SRL"})
+    assert ok["ok"] and d.items[0]["owner_team"] == "legal"
 
 
 def test_tickets_are_context_and_repeated_failures_are_dropped_visibly(d):

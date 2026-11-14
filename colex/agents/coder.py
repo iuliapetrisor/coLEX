@@ -7,7 +7,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from colex import prompts, testrunner
+from colex import db, prompts, testrunner
+from colex.runtime import store
 from colex.agents import coder_apply as ca
 from colex.agents.coder_brief import brief, files, result
 from colex.agents.impact_loop import law_block, tools_for
@@ -27,6 +28,15 @@ def run(ctx, law: LawDocument, item: dict[str, Any], feedback: list[str], deps) 
     ctx.emit("rationale", f"Tests before the change: {len(before['passed'])} pass, {len(failing)} fail. "
                           f"Target: {len(wanted)} failing compliance test(s) for {target_path}. "
                           f"Editable: {', '.join(allowed)}", {"targets": wanted, "editable": allowed})
+    for row in db.connect().execute("select branch_id, output_ref from steps where run_id=? and node='REMEDIATE' "
+                                    "and status='done'", (ctx.run_id,)):
+        other = store.get_blob(row["output_ref"])
+        if (row["branch_id"] != item["item_id"] and wanted and set(wanted) <= set(other.get("targets", []))
+                and other.get("change", {}).get("status") == "awaiting_review"):
+            ctx.emit("rationale", f"The change request of item {row['branch_id']} already makes these tests pass; "
+                                  "no second change request is opened", {"covered_by": row["branch_id"]})
+            return {"covered_by": row["branch_id"], "targets": wanted,
+                    "summary": f"Covered by the change request of item {row['branch_id']}."}
     if before["unusable"]:
         return result("needs_human", branch, "", before, None, 0,
                       "The test suite could not be run before the change. Nothing was changed.")
@@ -34,7 +44,7 @@ def run(ctx, law: LawDocument, item: dict[str, Any], feedback: list[str], deps) 
         return result("needs_human", branch, "", before, None, 0,
                       "No failing test covers this item, so coLEX cannot check a change. Nothing was changed.")
     system, version = prompts.load("coder", cfg)
-    fixed = brief(item, law_block(law, [item["article_id"]]), allowed, wanted, before, feedback)
+    fixed = brief(item, law_block(law, [item["article_id"]]), allowed, wanted, before, feedback, worktree)
     history: list[dict[str, Any]] = []
     after = None
     for attempt in range(1, max_iter + 1):

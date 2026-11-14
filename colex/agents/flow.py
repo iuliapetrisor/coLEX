@@ -47,4 +47,7 @@ def advance(deps, run_id: str) -> None:
                       agent="registers")
         for extra in reg.get("items", []):
             items.setdefault(extra["item_id"], extra)
+        if reg.get("items"):
+            rt.step(run_id, "main", "LIAISON", lambda c: notify(deps, c, law, reg["items"], "register"),
+                    key="main:LIAISON:register", agent="liaison")
     advance_branches(deps, run_id, law, items, questions)
