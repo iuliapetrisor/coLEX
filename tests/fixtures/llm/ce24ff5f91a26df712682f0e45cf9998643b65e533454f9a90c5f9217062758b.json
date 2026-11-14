@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_TJ8Zl8mRhRkeJOw36cdl0pbP",
+       "function": {
+        "name": "read",
+        "arguments": "{\"uri\":\"onedrive://legal/contracts/sms-otp-smsnord.md\",\"start\":40,\"end\":49,\"rationale\":\"Read end of SMS and One-Time Password Delivery Agreement to check for missing clause 30(3)(e) related to instant credit transfers and verification obligations\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 10733,
+   "completion_tokens": 69,
+   "total_tokens": 10802,
+   "cost": 0.0013316,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 10240,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0013316,
+    "upstream_inference_prompt_cost": 0.0012212,
+    "upstream_inference_completions_cost": 0.0001104
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

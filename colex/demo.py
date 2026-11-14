@@ -77,7 +77,7 @@ def answer_pending(deps, engine, printer: Printer) -> int:
 
 def main(argv: list[str]) -> int:
     started = time.monotonic()
-    engine, deps = build(settings.ROOT / "var" / "demo")
+    engine, deps = build(Path(os.environ.get("COLEX_DEMO_DIR", settings.ROOT / "var" / "demo")))
     from colex.agents import watcher
     from colex.runtime import store
     printer = Printer(quiet="--quiet" in argv)
@@ -113,7 +113,8 @@ def main(argv: list[str]) -> int:
                   f"change requests {len(summary['change_requests'])} (merged: 0)")
     unfinished = [law["celex"] for law in laws if law["run_id"]
                   and store.run_row(law["run_id"])["status"] != "done"]
-    print(f"\nFinished in {time.monotonic() - started:.1f}s. State: var/demo/. "
+    print("\nOpen the Console on this state with: make console")
+    print(f"Finished in {time.monotonic() - started:.1f}s. State: {settings.var_dir()}. "
           + (f"NOT finished: {', '.join(unfinished)}" if unfinished else "All runs completed."))
     return 1 if unfinished else 0
 

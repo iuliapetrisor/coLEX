@@ -29,3 +29,10 @@ demo: setup
 .PHONY: map
 map: setup
 	$(BIN)/python -m colex.map
+
+# Re-record the model answers used by `make demo OFFLINE=1` and by the offline end-to-end test.
+# Calls OpenRouter for anything not in the local cache (var/llm_cache). Run it after changing a prompt.
+.PHONY: record
+record: setup
+	rm -f tests/fixtures/llm/*.json
+	COLEX_LLM_MODE=record $(BIN)/python -m colex.demo --quiet

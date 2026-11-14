@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_RKc75LBqs5cHBmwNQYJHfqLW",
+       "function": {
+        "name": "report_impact",
+        "arguments": "{\"article_id\":\"Art. 5\",\"resource_uri\":\"onedrive://shared/vendor-kyc-agreement.md\",\"start\":9,\"end\":9,\"quote\":\"9: Supports a critical or important function: no\",\"obligation\":\"No contract review needed for Identity Verification Services Agreement as it does not support a critical or important function, so Art. 5 obligations on ICT incident notifications do not apply.\",\"action\":\"CONTRACT_REVIEW\",\"confidence\":1}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 12848,
+   "completion_tokens": 104,
+   "total_tokens": 12952,
+   "cost": 0.001696,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 12032,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.001696,
+    "upstream_inference_prompt_cost": 0.0015296,
+    "upstream_inference_completions_cost": 0.0001664
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "agent": "triage",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": "{\"relevance\": 0.0, \"reason\": \"The act concerns a correction to a chemical formula in a regulation unrelated to payment services or financial activities of the company.\", \"articles_flagged\": [], \"matched_profile_facts\": []}",
+     "refusal": null,
+     "reasoning": null
+    },
+    "finish_reason": "stop"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 954,
+   "completion_tokens": 51,
+   "total_tokens": 1005,
+   "cost": 0.0004632,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0004632,
+    "upstream_inference_prompt_cost": 0.0003816,
+    "upstream_inference_completions_cost": 8.16e-05
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

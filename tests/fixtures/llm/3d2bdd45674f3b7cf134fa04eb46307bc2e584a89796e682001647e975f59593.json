@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_ONstTRcRFSS84FBNYPo0CH28",
+       "function": {
+        "name": "report_impact",
+        "arguments": "{\"article_id\":\"Art. 5\",\"resource_uri\":\"repo://payments/incidents.py\",\"start\":9,\"end\":20,\"quote\":\"9: INITIAL_REPORT_HOURS = 24\\n10: FINAL_REPORT_DAYS = 30\\n\\n13: def initial_report_deadline(aware_at: datetime, classified_at: datetime) -> datetime:\\n14:     \\\"\\\"\\\"When the initial notification of a major incident is due.\\\"\\\"\\\"\\n15:     return aware_at + timedelta(hours=INITIAL_REPORT_HOURS)\\n\\n18: def final_report_deadline(previous_report_at: datetime) -> datetime:\\n19:     \\\"\\\"\\\"When the final report is due, counted from the previous report.\\\"\\\"\\\"\\n20:     return previous_report_at + timedelta(days=FINAL_REPORT_DAYS)\",\"obligation\":\"Change the initial report deadline in code from 24 hours after awareness to as early as possible and within 4 hours from classification of the incident as major, to comply with Art. 5(a).\",\"action\":\"CODE_CHANGE\",\"confidence\":0.9}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 11234,
+   "completion_tokens": 231,
+   "total_tokens": 11465,
+   "cost": 0.0015608,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 11008,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0015608,
+    "upstream_inference_prompt_cost": 0.0011912,
+    "upstream_inference_completions_cost": 0.0003696
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

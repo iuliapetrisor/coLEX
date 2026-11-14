@@ -1,0 +1,60 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_h6EPmMxFZLTTjSEybWPcHrwX",
+       "function": {
+        "name": "counterparty",
+        "arguments": "{\"name\":\"Identity Verification Services Agreement\",\"rationale\":\"Re-assess the Identity Verification Services Agreement as it supports a critical function for instant credit transfers and payee verification per legal team answer\"}"
+       }
+      },
+      {
+       "type": "function",
+       "index": 1,
+       "id": "call_qJoHoliVvobaAaRGO2BdUEyb",
+       "function": {
+        "name": "related",
+        "arguments": "{\"uri_or_path\":\"Legal & Compliance › Contracts › Identity Verification Services Agreement\",\"kinds\":[\"implements\"],\"rationale\":\"Find code or configuration implementing the Identity Verification Services Agreement as it supports a critical function for instant credit transfers and payee verification\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 6735,
+   "completion_tokens": 122,
+   "total_tokens": 6857,
+   "cost": 0.0023516,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 1792,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0023516,
+    "upstream_inference_prompt_cost": 0.0021564,
+    "upstream_inference_completions_cost": 0.0001952
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

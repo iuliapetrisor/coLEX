@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_5IuqkUuAeGoyr23eLphVd1sa",
+       "function": {
+        "name": "read",
+        "arguments": "{\"uri\":\"repo://payments/incidents.py\",\"start\":1,\"end\":30,\"rationale\":\"Read code for deadlines and details of reporting major ICT incidents to the National Bank of Romania to check compliance with Art. 5 deadlines and Art. 1 to Art. 6 content requirements.\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 10476,
+   "completion_tokens": 70,
+   "total_tokens": 10546,
+   "cost": 0.0014224,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 9600,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0014224,
+    "upstream_inference_prompt_cost": 0.0013104,
+    "upstream_inference_completions_cost": 0.000112
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

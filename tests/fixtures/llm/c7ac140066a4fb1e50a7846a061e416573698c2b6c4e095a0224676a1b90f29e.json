@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_lMQXQukoTpwtCyJGrlBIkVBV",
+       "function": {
+        "name": "browse",
+        "arguments": "{\"path\":\"PayRo › Payments\",\"depth\":2,\"rationale\":\"Browse Payments area to find Identity Verification Services Agreement and related resources supporting instant credit transfers and payee verification\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 7176,
+   "completion_tokens": 46,
+   "total_tokens": 7222,
+   "cost": 0.000832,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 7040,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.000832,
+    "upstream_inference_prompt_cost": 0.0007584,
+    "upstream_inference_completions_cost": 7.36e-05
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

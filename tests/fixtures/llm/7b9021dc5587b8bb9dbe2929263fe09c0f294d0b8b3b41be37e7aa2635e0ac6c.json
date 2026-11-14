@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_NttQ1bWmZogTtFlOofvCloxa",
+       "function": {
+        "name": "read",
+        "arguments": "{\"uri\":\"onedrive://legal/contracts/core-banking-ledgercore.md\",\"start\":1,\"end\":20,\"rationale\":\"Read beginning of Core Ledger Software-as-a-Service Agreement to check for clauses on instant credit transfers and verification obligations\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 9503,
+   "completion_tokens": 58,
+   "total_tokens": 9561,
+   "cost": 0.0013212,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 8576,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0013212,
+    "upstream_inference_prompt_cost": 0.0012284,
+    "upstream_inference_completions_cost": 9.28e-05
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

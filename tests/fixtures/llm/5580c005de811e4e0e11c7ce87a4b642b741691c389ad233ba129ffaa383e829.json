@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_aHjemmHuVHCPVJnXrqZbHb1u",
+       "function": {
+        "name": "finish",
+        "arguments": "{\"summary\":\"Reviewed contracts, customer terms, incident procedures, code, and fee configuration for compliance with Regulation (EU) 2022/2554. Reported missing client notification clauses in customer terms and incident procedure, assistance cost clause in SMS OTP contract, and requested legal clarification on criticality for CardAxis contract and code compliance with Art. 28. Other contracts comply with Art. 30. Fee schedule has no ICT-related fees requiring change.\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 24787,
+   "completion_tokens": 101,
+   "total_tokens": 24888,
+   "cost": 0.002742,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 24448,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.002742,
+    "upstream_inference_prompt_cost": 0.0025804,
+    "upstream_inference_completions_cost": 0.0001616
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

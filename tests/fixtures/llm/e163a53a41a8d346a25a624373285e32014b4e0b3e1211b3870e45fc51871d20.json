@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_BJJoCtnc0AEby0SB1iw3I3iy",
+       "function": {
+        "name": "report_impact",
+        "arguments": "{\"article_id\":\"Art. 5\",\"resource_uri\":\"onedrive://shared/vendor-kyc-agreement.md\",\"start\":30,\"end\":34,\"quote\":\"30: ## 7. Termination\\n31: Either party may terminate with 30 days' notice.\\n32: \\n33: ## 8. Security awareness and training\\n34: The Provider joins PayRo's ICT security awareness programmes and resilience training.\",\"obligation\":\"Add clauses on timely notification of major ICT-related incidents including initial, intermediate and final reports as required by Art. 5 to the Identity Verification Services Agreement if it supports critical or important functions.\",\"action\":\"CONTRACT_REVIEW\",\"confidence\":0.7}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 12514,
+   "completion_tokens": 153,
+   "total_tokens": 12667,
+   "cost": 0.0016024,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 12160,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0016024,
+    "upstream_inference_prompt_cost": 0.0013576,
+    "upstream_inference_completions_cost": 0.0002448
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

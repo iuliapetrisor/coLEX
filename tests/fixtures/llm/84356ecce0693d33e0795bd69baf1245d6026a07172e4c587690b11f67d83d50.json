@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_b7OD245ypBRENvoyK73DL8Nb",
+       "function": {
+        "name": "report_impact",
+        "arguments": "{\"article_id\":\"Art. 19\",\"resource_uri\":\"gdrive://product/terms-and-conditions.md\",\"start\":22,\"end\":23,\"quote\":\"22: ## 6. Complaints\\n23: Write to ⟨EMAIL_bf14d3⟩. We answer within 15 business days.\",\"obligation\":\"The customer terms must be updated to include client notification obligations about major ICT-related incidents without undue delay, as required by Art. 19(3).\",\"action\":\"TERMS_UPDATE\",\"confidence\":0.95}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 15810,
+   "completion_tokens": 124,
+   "total_tokens": 15934,
+   "cost": 0.001876,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 15488,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.001876,
+    "upstream_inference_prompt_cost": 0.0016776,
+    "upstream_inference_completions_cost": 0.0001984
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}
