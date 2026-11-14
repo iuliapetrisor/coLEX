@@ -39,7 +39,9 @@ def _result(content: str = "", calls: list[tuple[str, dict[str, Any]]] | None = 
 
 
 class ScriptedLLM:
-    def __init__(self, impact_script=None, coder_answers: list[dict[str, Any]] | None = None) -> None:
+    def __init__(self, impact_script=None, coder_answers: list[dict[str, Any]] | None = None,
+                 relevant: set[str] | None = None) -> None:
+        self.relevant = relevant or RELEVANT
         self.impact_script = impact_script or IMPACT_SCRIPT
         self.coder_answers = list(coder_answers or [])
         self.calls: list[str] = []
@@ -48,7 +50,7 @@ class ScriptedLLM:
         self.calls.append(agent)
         if agent == "triage":
             celex = re.search(r"CELEX:(\w+)", messages[-1]["content"]).group(1)
-            verdict = Verdict(relevance=1.0 if celex in RELEVANT else 0.0, articles_flagged=["Art. 1"],
+            verdict = Verdict(relevance=1.0 if celex in self.relevant else 0.0, articles_flagged=["Art. 1"],
                               reason="scripted verdict")
             return _result(parsed=verdict)
         if agent == "impact":

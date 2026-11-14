@@ -61,3 +61,24 @@ def run(ctx, law, items: list[dict[str, Any]], deps) -> dict[str, Any]:
 def deps_lines(ctx, mv: str, uri: str) -> list[str]:
     from colex.map.tools import MapTools
     return MapTools(ctx.config, mv).lines(uri) or [""]
+
+
+def critical_contract_item(ctx, law, uri: str, item_id: str) -> dict[str, Any] | None:
+    """After legal confirmed that a contract supports a critical or important function: its 30(3) gaps apply."""
+    mv = store.run_row(ctx.run_id)["map_version_id"]
+    row = next((r for r in registers.dora_rows(mv) if r["source_uri"] == uri), None)
+    missing = (row["_missing"] + [c for c in row["to_check_if_critical"].split("; ") if c]) if row else []
+    if not missing:
+        return None
+    labels = registers.checklist()
+    line = row["_critical_line"] or row["_parties_line"] or 1
+    text = deps_lines(ctx, mv, uri)[line - 1].strip()[:300] or row["provider"]
+    wording = "; ".join(f"{c} {labels[c]['label']}" for c in missing)
+    item = ImpactItem(
+        item_id=item_id, article_id=ARTICLE, resource_uri=uri, lines={"start": line, "end": line},
+        action="CONTRACT_REVIEW", owner_team=None if row["owner_team"] == "unknown" else row["owner_team"],
+        evidence=text, citation=f"CELEX:{law.celex} {ARTICLE}", confidence=0.7,
+        obligation=f"Legal confirmed that the contract with {row['provider']} supports a critical or important "
+                   f"function. No clause was found for: {wording}. Text heuristic: confirm by reading.")
+    return {**item.model_dump(mode="json"), "breadcrumbs": row["_primary_path"],
+            "legal_steward": row["_legal_steward"], "ownership_source": row["_ownership_source"]}
