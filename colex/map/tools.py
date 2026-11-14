@@ -12,7 +12,7 @@ from colex.map.hierarchy import SEP, norm_path
 from colex.map.tools_base import UNCLASSIFIED, Base, tokens  # noqa: F401
 from colex.map.tools_lookup import Lookup
 
-MAX_READ_LINES = 80
+MAX_READ_LINES = 40
 
 
 class MapTools(Base, Lookup):
@@ -26,8 +26,7 @@ class MapTools(Base, Lookup):
     def browse(self, path: str, depth: int = 1, facets: dict[str, Any] | None = None) -> dict[str, Any]:
         node, bad = self._node(path), self._bad_facets(facets)
         if node is None or bad:
-            return self._out(norm_path(str(path)) or "?",
-                             {"error": bad or f"unknown path '{path}'; start from overview()"})
+            return self._out(norm_path(str(path)) or "?", {"error": bad} if bad else self._unknown(path))
         try:
             depth = max(1, min(int(depth), 2))
         except (TypeError, ValueError):
@@ -47,8 +46,7 @@ class MapTools(Base, Lookup):
     def list_resources(self, path: str, facets: dict[str, Any] | None = None, cursor: int = 0) -> dict[str, Any]:
         node, bad = self._node(path), self._bad_facets(facets)
         if node is None or bad:
-            return self._out(norm_path(str(path)) or "?",
-                             {"error": bad or f"unknown path '{path}'; use browse() to find a valid path"})
+            return self._out(norm_path(str(path)) or "?", {"error": bad} if bad else self._unknown(path))
         found = [r for r in self._rows(node["path"]) if self._match(r, facets or {})]
         return self._out(node["path"], self._page(found, cursor))
 
@@ -86,5 +84,9 @@ class MapTools(Base, Lookup):
                 area = r["primary_path"].split(SEP)[1]
                 areas[area] = areas.get(area, 0) + tokens(r["body"])
         fragments = con.execute("select count(*) n from fragments where mv=?", (self.mv,)).fetchone()["n"]
+        read = set()
+        for uri, start, end in self.meter["read"]:
+            read |= {(uri, r["start"]) for r in con.execute(
+                "select start from fragments where mv=? and uri=? and start<=? and end>=?", (self.mv, uri, end, start))}
         return {"corpus_tokens": sum(tokens(r["body"]) for r in rows), "area_tokens": areas,
-                "fragments": fragments, "resources": len(rows)}
+                "fragments": fragments, "fragments_read": len(read), "resources": len(rows)}

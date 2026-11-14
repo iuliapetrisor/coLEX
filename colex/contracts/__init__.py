@@ -19,7 +19,7 @@ from colex.contracts.map import (
 from colex.contracts.runtime import AuditEvent, Checkpoint, ConfigVersion, Run
 from colex.contracts.work import ChangeRequest, ImpactItem, Notification, Question, SuiteResult
 
-CONTRACTS_VERSION = "1"
+CONTRACTS_VERSION = "2"
 
 __all__ = [
     "CONTRACTS_VERSION", "Contract", "Confidence", "Evidence", "LineRange", "NonBlank",

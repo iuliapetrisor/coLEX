@@ -27,6 +27,20 @@ For whoever continues this build (including the orchestrator after a context res
 3. Triage with the cheap model. 4. Slack notifier (Block Kit, Socket Mode handlers). 5. Coder with GitOps and sandboxed tests.
 6. DORA register. 7. Console (FastAPI). 8. Cassettes for `OFFLINE=1`, eval, `docs/MORNING_REVIEW.md`.
 
+## State (after the Company Map, session 2)
+
+- Done and merged: official feed, PayRo sandbox + ground truth, Company Map (`colex/map/`, `make map`, 21/21 resources match ground truth), runtime, LLM client, walking skeleton.
+- Still stubs: triage (keywords only), impact, coder, registers. Not started: Slack implementation, Console, eval, cassettes.
+- Planned design for the remaining work (follow it unless it proves wrong):
+  - Triage: deterministic profile facts + one cheap-model call returning JSON; borderline band asks #compliance.
+  - Impact: tool loop over the map tools; every call needs a `rationale`; outputs go through `report_impact` / `ask_legal` / `finish` tools; a grounding validator rejects items whose quote is not verbatim in the cited lines, whose article is unknown, or whose deadline is not a date in the cited article. Owner comes from the map card, never from the model.
+  - `wrap_untrusted` nonce must be derived from the content (hash), not random, or the LLM cache and cassettes never hit.
+  - LLM cache must live outside the demo state dir (file cache under `var/llm_cache/`); cassettes in `tests/fixtures/llm/` are the committed copy (`make record`).
+  - Coder: `GitOps` with a git subcommand allowlist and a `reference-transaction` hook on the sandbox repo; one JSON edit-block answer per iteration; sandboxed pytest; success = relevant tests pass and nothing that passed before fails; tests/ edits rejected.
+  - Registers: DORA register CSV from the map; gaps the analyst did not report become items.
+  - Slack: `SlackNotifier(OutboxNotifier)`, Block Kit builders, Socket Mode handlers calling `Runtime.deliver_human_answer`.
+  - Console: FastAPI, server-rendered; act-from-Console uses the same `deliver_human_answer`.
+
 ## Design notes
 
 - A run is driven by `Engine.drive(run_id)`; it replays completed steps (D-016). Human answers go through `Runtime.deliver_human_answer`.

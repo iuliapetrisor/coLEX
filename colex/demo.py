@@ -34,7 +34,9 @@ def build(var: Path, fresh: bool = True):
     from colex.runtime.api import Runtime
 
     deps = Deps(rt=Runtime(), llm=LLMClient(), notifier=FakeNotifier())
-    return Engine(deps), deps
+    engine = Engine(deps)
+    engine.ensure_map()
+    return engine, deps
 
 
 class Printer:

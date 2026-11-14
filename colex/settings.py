@@ -44,3 +44,10 @@ def inbox() -> Path:
 
 def offline() -> bool:
     return os.environ.get("COLEX_OFFLINE", "") not in ("", "0", "false")
+
+
+def llm_cache_dir() -> Path:
+    """Local response cache. Kept outside the demo state directory so re-running the demo is free."""
+    path = Path(os.environ.get("COLEX_LLM_CACHE", ROOT / "var" / "llm_cache"))
+    path.mkdir(parents=True, exist_ok=True)
+    return path

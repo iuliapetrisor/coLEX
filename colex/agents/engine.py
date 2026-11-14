@@ -9,6 +9,8 @@ from typing import Any
 
 from colex.agents import flow, watcher
 from colex.contracts import Question
+from colex.map import build as map_build
+from colex.map import store as map_store
 from colex.runtime import audit, store
 from colex.runtime.api import BudgetExceeded, RunPaused, Runtime, StepFailed
 
@@ -77,11 +79,20 @@ class Engine:
         else:
             rt.cancel(run_id, answer.get("actor", "human"))
 
+    def ensure_map(self, rebuild: bool = False) -> str:
+        """Build the Company Map if none is active (or on request). Returns the active map version."""
+        if rebuild or not map_store.active():
+            stats = map_build.build(self.deps.rt.configs.active().payload)
+            audit.emit(None, "map", "-", "map", f"Company Map {stats['map_version_id']} built: "
+                       f"{stats['resources']} resources, {stats['edges']} links, {stats['unclassified']} unclassified")
+        return map_store.active()
+
     def poll_feed(self, feed: Path) -> dict[str, list[str]]:
         """Register newly published acts and start one run per act."""
         found = watcher.scan(feed)
         for celex in found["new"]:
             run = self.deps.rt.start_run(celex)
+            self.deps.rt.set_meta(run.run_id, map_version_id=self.ensure_map())
             watcher.set_law(celex, run_id=run.run_id, status="triage")
             found.setdefault("runs", []).append(run.run_id)
         return found

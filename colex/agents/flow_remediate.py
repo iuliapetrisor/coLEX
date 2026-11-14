@@ -4,8 +4,8 @@ from __future__ import annotations
 from typing import Any
 
 from colex.agents import coder
-from colex.agents.flow_common import CR_FIELDS, decided
-from colex.contracts import ChangeRequest, ImpactItem, Notification
+from colex.agents.flow_common import CR_FIELDS, decided, to_item
+from colex.contracts import ChangeRequest, Notification
 
 
 def remediate(deps, run_id: str, law, item: dict[str, Any]) -> None:
@@ -19,7 +19,7 @@ def remediate(deps, run_id: str, law, item: dict[str, Any]) -> None:
         if change.status == "needs_human":
             note = Notification(channel=channel, title=f"coLEX could not produce a passing patch for {bid}",
                                 body=out.get("summary", "") + " An engineer needs to take over. Nothing was merged.",
-                                items=[ImpactItem(**{k: v for k, v in item.items() if k in ImpactItem.model_fields})],
+                                items=[to_item(item)],
                                 actions=["acknowledge"])
             key = f"needs-human:{run_id}:{bid}:{rnd}"
             rt.side_effect(key, lambda: deps.notifier.notify(note, run_id=run_id, idem_key=key).model_dump())
