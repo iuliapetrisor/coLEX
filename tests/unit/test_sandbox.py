@@ -21,15 +21,18 @@ def test_every_fabricated_file_is_labelled(path):
     assert "FICTIONAL – PayRo SRL" in head
 
 
-def _pytest(target: str) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", target],
+def _pytest(target: str, tmp: Path) -> subprocess.CompletedProcess:
+    ini = tmp / "pytest.ini"
+    ini.write_text("[pytest]\n", encoding="utf-8")
+    return subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "-c", str(ini),
+                           f"--rootdir={SEED}", f"--basetemp={tmp / 'base'}", target],
                           cwd=SEED, capture_output=True, text=True, timeout=120,
                           env={"PATH": "/usr/bin:/bin", "PYTHONDONTWRITEBYTECODE": "1"})
 
 
-def test_seed_repo_historical_tests_pass_and_compliance_tests_fail():
-    assert _pytest("tests/historical").returncode == 0
-    compliance = _pytest("tests/compliance")
+def test_seed_repo_historical_tests_pass_and_compliance_tests_fail(tmp_path):
+    assert _pytest("tests/historical", tmp_path).returncode == 0
+    compliance = _pytest("tests/compliance", tmp_path)
     assert compliance.returncode == 1
     for name in ("test_equal_charges", "test_verification_of_payee", "test_incident_reporting"):
         assert f"FAILED tests/compliance/{name}.py" in compliance.stdout

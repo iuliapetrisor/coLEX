@@ -53,3 +53,9 @@ reset:
 .PHONY: slack-check
 slack-check: setup
 	$(BIN)/python tools/slack_check.py
+
+# Score the recorded demo run against the hidden ground truth and write docs/RESULTS.md.
+# LIVE=1 scores a live run instead (calls OpenRouter for anything not cached).
+.PHONY: eval
+eval: setup
+	COLEX_OFFLINE=$(if $(LIVE),,1) $(BIN)/python tests/eval/run_eval.py
