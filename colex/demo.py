@@ -33,7 +33,10 @@ def build(var: Path, fresh: bool = True):
     from colex.notify.base import FakeNotifier
     from colex.runtime.api import Runtime
 
-    deps = Deps(rt=Runtime(), llm=LLMClient(), notifier=FakeNotifier())
+    from colex.gitops import GitOps
+    gitops = GitOps(settings.var_dir() / "repo", settings.var_dir() / "worktrees")
+    gitops.seed(settings.SANDBOX / "repo_seed")
+    deps = Deps(rt=Runtime(), llm=LLMClient(), notifier=FakeNotifier(), gitops=gitops)
     engine = Engine(deps)
     engine.ensure_map()
     return engine, deps

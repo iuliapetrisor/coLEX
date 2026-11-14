@@ -44,10 +44,19 @@ def replan(ctx, law: LawDocument, q: dict[str, Any], answer: dict[str, Any], aff
     dispatcher.seen |= scope
     dispatcher.scope = scope
     said = answer.get("decision") or answer.get("text") or ""
+    shown = ""
+    if uri and tools.card(uri):
+        first = dispatcher.call("list_resources", {"path": tools.card(uri)["primary_path"],
+                                                   "rationale": "re-plan: reload the card of the resource in question"})
+        mine = [r for r in first.get("items", []) if r["uri"] == uri]
+        head = dispatcher.call("read", {"uri": uri, "start": 1, "end": 12,
+                                        "rationale": "re-plan: header lines of the resource in question"})
+        shown = (f"\nIts card in the map: {json.dumps(mine, ensure_ascii=False)}\n"
+                 f"Its opening lines (already read; you may cite them):\n{head.get('text', '')}\n")
     held = [{k: i.get(k) for k in ("item_id", "resource_uri", "lines", "action", "obligation")} for i in affected]
     user = (f"Act: {law.title}\nCELEX: {law.celex}\n\nThe legal team answered a question you asked.\n"
             f"Question: {q['question']['text']}\nAnswer: {said}\nIt concerns: {uri or 'the act in general'}\n"
-            f"Items on hold because of this question: {json.dumps(held, ensure_ascii=False)}\n\n"
+            f"Items on hold because of this question: {json.dumps(held, ensure_ascii=False)}\n{shown}\n"
             "Take the answer as a fact. Re-assess ONLY this resource and what is directly linked to it. "
             "Report with report_impact every item that applies now (report the on-hold items again if they still "
             "apply), then call finish. Do not analyse anything else and do not ask the same question again.\n\n"
