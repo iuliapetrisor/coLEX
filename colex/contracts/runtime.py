@@ -4,10 +4,9 @@ Checkpoints and config versions must never hold secrets or un-redacted personal 
 """
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Any, Literal
 
-from pydantic import Field
+from pydantic import AwareDatetime, Field
 
 from colex.contracts.common import Contract, NonBlank, NonNegInt
 from colex.contracts.work import Question
@@ -16,7 +15,7 @@ RunStatus = Literal["running", "waiting_for_legal", "waiting_for_review", "faile
 
 
 class AuditEvent(Contract):
-    ts: datetime
+    ts: AwareDatetime
     agent: NonBlank
     step: NonBlank
     input_ref: str | None = None
@@ -54,13 +53,13 @@ class Checkpoint(Contract):
     config_version_id: NonBlank
     map_version_id: str | None = None
     parent_id: str | None = None
-    ts: datetime
+    ts: AwareDatetime
 
 
 class ConfigVersion(Contract):
     version_id: NonBlank
     hash: NonBlank
     author: NonBlank
-    ts: datetime
+    ts: AwareDatetime
     diff: str = ""
     payload: dict[str, Any]

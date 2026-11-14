@@ -12,7 +12,6 @@ from tests.contract.payloads import VALID
 NAIVE_TS = "2026-11-14T10:00:00"
 
 
-@pytest.mark.xfail(strict=True, reason="R-003")
 @pytest.mark.parametrize("name", ["AuditEvent", "Checkpoint", "ConfigVersion"])
 def test_timestamps_without_timezone_are_rejected(name):
     with pytest.raises(ValidationError):
