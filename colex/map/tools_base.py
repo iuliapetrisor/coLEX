@@ -99,6 +99,12 @@ class Base:
                                    (self.mv, str(uri))).fetchone()
         return json.loads(row["card_json"]) if row else None
 
+    def facts(self, uri: str) -> dict[str, Any]:
+        """Extracted facts of a resource, e.g. contract criticality (not metered)."""
+        row = db.connect().execute("select facts_json from resources where mv=? and uri=?",
+                                   (self.mv, str(uri))).fetchone()
+        return json.loads(row["facts_json"]) if row else {}
+
     def lines(self, uri: str) -> list[str] | None:
         """All lines of a map resource, or None (not metered: used by validators, never by the agent)."""
         row = db.connect().execute("select body from resources where mv=? and uri=?", (self.mv, str(uri))).fetchone()

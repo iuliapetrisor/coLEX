@@ -102,11 +102,25 @@ def test_injected_instructions_are_flagged_and_change_nothing(d):
     assert d.items == [] and d.questions == [] and d.finished is None
 
 
-def test_questions_need_options_and_are_asked_once_per_resource(d):
+def test_criticality_is_not_asked_when_the_act_does_not_depend_on_it(d):
+    out = d.call("ask_legal", {"question": "Does this provider support a critical function?", "article_id": ART,
+                               "options": ["Yes", "No"],
+                               "resource_uri": "onedrive://legal/contracts/card-processing-cardaxis.md"})
+    assert "not needed for this act" in out["error"] and d.questions == []
+    known = d.call("ask_legal", {"question": "Does this provider support a critical function?",
+                                 "options": ["Yes", "No"], "article_id": ART,
+                                 "resource_uri": "onedrive://legal/contracts/cloud-hosting-aws.md"})
+    assert "records no unknown" in known["error"]
+
+
+def test_questions_need_options_and_are_asked_once_per_resource(d, tools):
+    from colex.agents import watcher as w
+    d.law = w.parse(settings.FEED / "32022R2554.md")          # an act that does depend on criticality
+    d.flagged = ["Art. 30"]
     uri = "onedrive://legal/contracts/card-processing-cardaxis.md"
     assert "error" in d.call("ask_legal", {"question": "Is this provider critical for us?", "options": ["Yes"]})
     ask = {"question": "Does this provider support a critical function?", "options": ["Yes", "No", "Yes"],
-           "article_id": ART, "resource_uri": uri}
+           "article_id": "Art. 30", "resource_uri": uri}
     assert d.call("ask_legal", ask)["question_id"] == "q1"
     assert "already open" in d.call("ask_legal", ask)["note"]
     assert d.questions[0]["question"]["options"] == ["Yes", "No"] and len(d.questions) == 1

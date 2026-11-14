@@ -48,6 +48,23 @@ class Reporting:
             return {"ok": True, "note": "a question about this resource is already open"}
         if len(self.questions) >= MAX_QUESTIONS:
             return {"error": "question limit reached; continue with what the documents establish"}
+        if uri:
+            card, facts = self.tools.card(uri), self.tools.facts(uri)
+            if card is None:
+                return {"error": f"'{uri}' is not a resource in the map"}
+            unknowns = []
+            if card["info_type"] == "contract" and facts.get("critical") is None:
+                unknowns.append("whether it supports a critical or important function is not assessed")
+            if card["owner_team"] is None:
+                unknowns.append("its owner is unknown")
+            flagged_text = " ".join(a.text for a in self.law.articles if a.id in self.flagged).lower()
+            if unknowns and card["owner_team"] is not None and "critical or important" not in flagged_text:
+                return {"error": "the flagged articles do not depend on whether a provider supports a critical or "
+                                 "important function, so this question is not needed for this act"}
+            if not unknowns:
+                return {"error": "the map records no unknown for this resource (for a contract: criticality is "
+                                 f"{facts.get('critical')}); use what is recorded. If the article itself is "
+                                 "ambiguous for the company, ask without resource_uri."}
         text = str(args.get("question", "")).strip()
         raw = args.get("options") if isinstance(args.get("options"), list) else []
         options = list(dict.fromkeys(str(o).strip()[:70] for o in raw if str(o).strip()))[:4]
