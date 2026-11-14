@@ -16,6 +16,8 @@ class Contract(BaseModel):
 NonBlank = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 Confidence = Annotated[float, Field(ge=0.0, le=1.0)]
 NonNegInt = Annotated[int, Field(ge=0)]
+# A token count, cost or other amount: finite and never negative.
+NonNegFinite = Annotated[float, Field(ge=0.0, allow_inf_nan=False)]
 
 
 class LineRange(Contract):

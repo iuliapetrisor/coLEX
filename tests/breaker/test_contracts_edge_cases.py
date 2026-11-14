@@ -28,7 +28,6 @@ def test_ownership_source_must_agree_with_owner_team(owner_team, ownership_sourc
         c.ResourceCard.model_validate(payload)
 
 
-@pytest.mark.xfail(strict=True, reason="R-005")
 @pytest.mark.parametrize("value", [math.inf, math.nan, -1.0])
 def test_checkpoint_budgets_must_be_finite_and_non_negative(value):
     with pytest.raises(ValidationError):

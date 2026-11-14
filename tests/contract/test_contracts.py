@@ -94,3 +94,8 @@ def test_a_change_request_can_never_be_merged():
 def test_negative_token_counts_are_rejected():
     with pytest.raises(ValidationError):
         c.AuditEvent.model_validate({**VALID["AuditEvent"], "tokens_in": -1})
+
+
+def test_infinite_cost_is_rejected():
+    with pytest.raises(ValidationError):
+        c.AuditEvent.model_validate({**VALID["AuditEvent"], "cost_usd": float("inf")})

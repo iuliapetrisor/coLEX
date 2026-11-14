@@ -8,7 +8,7 @@ from typing import Any, Literal
 
 from pydantic import AwareDatetime, Field
 
-from colex.contracts.common import Contract, NonBlank, NonNegInt
+from colex.contracts.common import Contract, NonBlank, NonNegFinite, NonNegInt
 from colex.contracts.work import Question
 
 RunStatus = Literal["running", "waiting_for_legal", "waiting_for_review", "failed", "done", "cancelled"]
@@ -22,7 +22,7 @@ class AuditEvent(Contract):
     output_ref: str | None = None
     tokens_in: NonNegInt = 0
     tokens_out: NonNegInt = 0
-    cost_usd: float = Field(default=0.0, ge=0.0)
+    cost_usd: NonNegFinite = 0.0
     duration_ms: NonNegInt = 0
     run_id: str | None = None
     model: str | None = None
@@ -49,7 +49,7 @@ class Checkpoint(Contract):
     state_ref: NonBlank
     pending_questions: list[Question] = Field(default_factory=list)
     git_ref: str | None = None
-    budgets_used: dict[str, float] = Field(default_factory=dict)
+    budgets_used: dict[str, NonNegFinite] = Field(default_factory=dict)
     config_version_id: NonBlank
     map_version_id: str | None = None
     parent_id: str | None = None
