@@ -34,7 +34,7 @@ All work was done by one session playing every role; every review was a self-rev
 | G3-SEC-07/08 | Merge-lock suite, Slack authorization tests | Security | G3 | done | Slack part with a fake client |
 | G4-QA-06 | Offline end-to-end test, resilience tests | QA | G4 | partial | Offline test done. One chaos script (`tests/chaos/kill_restart.sh`), run once |
 | G4-UI-06, G4-SEC-09 | Summary page, export scan, `SECURITY.md` | UI / Security | G4 | partial | Summary and `SECURITY.md` done; no scan of exports and cassettes beyond the token and sample-PII grep |
-| G4-UI-07, G4-UI-08 | PayRo demo app: one app that runs the code checked out on `main` of the sandbox repository, so it behaves differently after a human merge (D-023, D-024) | Console | G4 | done | Added in session 3 on request, then reworked: the first, side-by-side version looked staged. 5 tests. Not looked at in a browser by the orchestrator |
+| G4-UI-07, G4-UI-08, G4-UI-09 | PayRo demo app: two phones (sender, receiver). The sender's phone runs the code checked out on `main` of the sandbox repository, so fees and rules change after a human merge (D-023 to D-025) | Console | G4 | done | Reworked twice on the humans' feedback: first side by side, then one page with git and law panels, now only the phone. 8 tests. Checked over HTTP on a copy of the humans' repository and in headless Chrome screenshots |
 | G4-SBX-06, chaos S1–S15, runbook | Demo script, chaos matrix, demo runbook | Sandbox / Saboteur | G4 | todo | Only S3(b) was scripted |
 | G5 | Screenshots, video, pitch, one-pager | humans | G5 | todo | |
 

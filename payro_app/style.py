@@ -1,39 +1,55 @@
-"""Stylesheet and fixed texts of the PayRo demo page."""
+"""Look of the PayRo demo app: one phone on an otherwise empty page."""
+from __future__ import annotations
 
 CSS = """
-body{font:16px/1.4 system-ui,sans-serif;margin:0;background:#eef1f6;color:#1b1f2a}
-.top{background:#0b6e4f;color:#fff;padding:10px 22px} .top b{font-size:20px} .top small{opacity:.9;display:block}
-main{max-width:1080px;margin:0 auto;padding:14px 20px}
-.tabs a{display:inline-block;padding:7px 14px;margin:0 6px 8px 0;border-radius:18px;background:#fff;
-border:1px solid #c9d0db;color:#1b1f2a;text-decoration:none} .tabs a.on{background:#0b6e4f;color:#fff}
-form.in{background:#fff;border:1px solid #d5dae3;border-radius:10px;padding:10px 14px;margin-bottom:14px}
-form.in label{margin-right:14px;font-size:14px} input,select,button{font:inherit;padding:3px 6px}
-button{background:#0b6e4f;color:#fff;border:0;border-radius:6px;padding:5px 14px;cursor:pointer}
-.cols{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start} .side{flex:1;min-width:340px}
-.side .law{margin:0 0 14px} small{display:block} .prop{border-top:1px solid #edf0f4;padding:8px 0;margin-top:8px}
-.cmd{display:block;background:#1b1f2a;color:#e8f5ee;padding:6px 8px;border-radius:6px;margin-top:5px;
-word-break:break-all} .prop ul{margin:4px 0;padding-left:18px;font-size:13px}
-table.log{border-collapse:collapse;font-size:13px;width:100%;margin-top:6px}
-table.log td{padding:3px 6px;border-top:1px solid #edf0f4;vertical-align:top}
-.phone{width:360px;background:#fff;border:9px solid #1b1f2a;border-radius:34px;padding:0 0 14px;overflow:hidden}
-.bar{background:#0b6e4f;color:#fff;padding:12px 16px;font-weight:700;font-size:19px}
-.bar span{float:right;font-size:11px;font-weight:400;border:1px solid #fff;border-radius:8px;padding:1px 6px;margin-top:4px}
-.ver{font-size:13px;padding:7px 16px} .ver.live{background:#e4f3ec} .ver.draft{background:#fff3cd}
-h3{margin:12px 16px 6px} .row{padding:7px 16px;border-bottom:1px solid #edf0f4}
-.row span{display:block;font-size:12px;color:#667} .row small{display:block;color:#667}
-.opts{display:flex;gap:8px;padding:10px 16px}
-.opt{flex:1;border:2px solid #d5dae3;border-radius:10px;padding:8px;font-size:13px}
-.opt.sel{border-color:#0b6e4f;background:#f1faf6} .opt b{display:block;font-size:19px}
-.cmp{margin:0 16px 8px;padding:5px 9px;border-radius:7px;font-size:14px;font-weight:600}
-.good{color:#17603a} .bad{color:#a31515} .cmp.good{background:#e4f3ec} .cmp.bad{background:#fde8e8}
-.out{margin:8px 16px;padding:10px;border-radius:9px} .out.good{background:#e4f3ec}
-.out.warn{background:#fff3cd;color:#5c4400} .out.bad{background:#fde8e8}
-.btn{display:inline-block;margin-top:8px;background:#5c4400;color:#fff;padding:5px 10px;border-radius:6px;
-text-decoration:none;font-size:14px} .chk{font-size:13px;padding:2px 16px;color:#445} .chk ul{margin:4px 0;padding-left:18px}
-.law{background:#fff;border:1px solid #d5dae3;border-radius:10px;padding:10px 16px;margin-top:16px}
-blockquote{margin:8px 0;padding:4px 12px;border-left:4px solid #0b6e4f;font-size:15px}
-code{font:13px ui-monospace,monospace} .note{font-size:13px;color:#556;margin-top:12px}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#e7ebf0;
+font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#17202b}
+.phone{width:380px;min-height:740px;margin:20px;background:#f6f8fa;border:10px solid #17202b;border-radius:42px;
+overflow:hidden;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(23,32,43,.25)}
+.bar{background:#0b6e4f;color:#fff;padding:18px 20px 14px;display:flex;justify-content:space-between;align-items:center}
+.bar b{font-size:21px;letter-spacing:.2px} .bar span{font-size:13px;opacity:.9}
+.bal{background:#0b6e4f;color:#fff;padding:0 20px 22px} .bal small{display:block;opacity:.85;font-size:13px}
+.bal strong{font-size:30px}
+.body{padding:16px 16px 20px;flex:1} h2{font-size:17px;margin:4px 0 10px}
+label{display:block;font-size:12px;color:#5b6876;margin:10px 0 3px}
+input[type=text]{width:100%;font:inherit;padding:10px 12px;border:1px solid #cfd6de;border-radius:10px;background:#fff}
+.opts{display:flex;gap:10px;margin-top:14px} .opt{flex:1;margin:0;position:relative}
+.opt input{position:absolute;opacity:0}
+.opt span{display:block;border:2px solid #cfd6de;border-radius:12px;padding:9px 11px;background:#fff;font-size:15px;
+color:#17202b;cursor:pointer} .opt small{display:block;color:#5b6876;font-size:12px}
+.opt b{display:block;font-size:17px;margin-top:5px} .opt input:checked+span{border-color:#0b6e4f;background:#eef8f3}
+button,.btn{display:block;width:100%;margin-top:16px;padding:13px;border:0;border-radius:12px;background:#0b6e4f;
+color:#fff;font:inherit;font-weight:600;text-align:center;text-decoration:none;cursor:pointer}
+.btn.alt{background:#fff;color:#17202b;border:1px solid #cfd6de;margin-top:10px}
+.err{background:#fde8e8;color:#8f1d1d;border-radius:10px;padding:9px 12px;margin-bottom:6px;font-size:14px}
+.list{margin-top:20px} .item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;
+border-top:1px solid #e3e8ed;font-size:15px} .item small{display:block;color:#5b6876;font-size:12px}
+.item b{white-space:nowrap} .in{color:#0b6e4f} .wait{color:#8a6d1a}
+.done{text-align:center;padding-top:30px} .tick{width:74px;height:74px;border-radius:50%;background:#0b6e4f;color:#fff;
+font-size:40px;line-height:74px;margin:0 auto 12px} .warn .tick{background:#c98a00}
+.done h1{font-size:23px;margin:0} .done p{margin:6px 0 18px;color:#5b6876}
+.done small{display:block;color:#8a94a0;font-size:11px;word-break:break-word}
+.rows{background:#fff;border-radius:12px;padding:2px 14px;text-align:left;font-size:15px}
+.rows div{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid #eef1f4}
+.rows div:first-child{border-top:0} .rows span:first-child{white-space:nowrap;color:#5b6876}
+.rows span:last-child{text-align:right}
+.new{background:#eef8f3;border:1px solid #bfe3d2;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:14px}
+.new b{display:block;font-size:24px;color:#0b6e4f}
 """
 
-WHAT_IS_REAL = ("FICTIONAL – PayRo SRL is a fabricated company. Simulated on this page: the bank's account directory "
-                "and the SMS code. Real: the fees and the transfer logic, executed from each version of the repository.")
+
+def page(body: str, refresh: int = 0) -> str:
+    """A whole page that holds one phone. `refresh`: reload every N seconds (the receiver's phone)."""
+    meta = f"<meta http-equiv='refresh' content='{refresh}'>" if refresh else ""
+    return (f"<!doctype html><html lang='en'><head><meta charset='utf-8'>{meta}"
+            "<meta name='viewport' content='width=device-width, initial-scale=1'><title>PayRo</title>"
+            f"<style>{CSS}</style></head><body>{body}</body></html>")
+
+
+def eur(value: float) -> str:
+    return f"{value:,.2f} EUR"
+
+
+def iban_text(iban: str) -> str:
+    return " ".join(iban[i:i + 4] for i in range(0, len(iban), 4))

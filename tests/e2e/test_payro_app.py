@@ -1,91 +1,59 @@
-"""PayRo demo app: one app that runs the code checked out in the repository, so a human merge changes what it does.
-
-The branches here are written by the test (a known-good change per file), not by a model.
-"""
+"""PayRo demo app: only a phone on the page, money really moves to the receiver's phone, and the fee shown
+is the one of the code checked out in the repository (so a human merge changes it without a restart)."""
 from __future__ import annotations
 
-import os
-import re
-import subprocess
+from tests.e2e.conftest import payro_merge
 
-import pytest
-from fastapi.testclient import TestClient
-
-from colex import settings
-from colex.gitops import GitOps
-from payro_app.laws import NOTES
-from payro_app.repo import PayroRepo
-from payro_app.server import create_app
-
-VOP = '''    validate(transfer)
-    if not transfer.own_account and transfer.currency == "EUR" and not transfer.payee_confirmed:
-        if providers.verify_payee(transfer.payee_iban, transfer.payee_name) != "match":
-            raise TransferError("The payee name does not match this account. Check it, then confirm to send.")
-'''
+MARIA = {"name": "Maria Popescu", "iban": "RO49 AAAA 1B31 0075 9384 0000", "amount": "100", "speed": "instant"}
+NOT_ON_THE_PAGE = ("FICTIONAL", "fictional", "What the app did", "One-time password", "coLEX", "git -C", "EUR-Lex",
+                   "commit", "Regulation")
 
 
-def _branch(git, item, path, old, new):
-    name, wt = git.create_branch("run-t", item)
-    file = wt / path
-    text = file.read_text(encoding="utf-8")
-    assert text.count(old) == 1
-    file.write_text(text.replace(old, new), encoding="utf-8")
-    git.commit(wt, f"colex: change {path}", f"k-{item}")
-    return name
+def test_only_the_phone_is_on_the_page(payro):
+    for html in (payro.sender.get("/").text, payro.receiver.get("/").text,
+                 payro.sender.post("/send", data=MARIA).text):
+        assert html.count("<div class='phone'>") == 1
+        assert html.split("</div></body>")[0].count("<body><div class='phone'>") == 1   # nothing beside the phone
+        assert not [word for word in NOT_ON_THE_PAGE if word in html]
 
 
-def _git(git, *args):
-    """git as a person at a terminal: no COLEX_AGENT in the environment."""
-    env = {"PATH": os.environ["PATH"], "HOME": str(git.repo.parent), "GIT_CONFIG_NOSYSTEM": "1"}
-    done = subprocess.run(["git", *args], cwd=git.repo, env=env, capture_output=True, text=True)
-    assert done.returncode == 0, done.stderr
-    return done.stdout
+def test_send_moves_the_money_to_the_receivers_phone(payro):
+    before = payro.receiver.get("/").text
+    assert "No transactions yet." in before and "320.00 EUR" in before and "Money received" not in before
+    assert "http-equiv='refresh'" in before                                   # the receiver's phone updates by itself
+    assert "2,500.00 EUR" in payro.sender.get("/").text
+
+    done = payro.sender.post("/send", data=MARIA)
+    assert done.url.path == "/sent/1"                                         # redirected: a reload cannot send twice
+    assert "Money sent" in done.text and "100.00 EUR to Maria Popescu" in done.text
+    assert "<b>1.50 EUR</b>" in done.text and "<b>101.50 EUR</b>" in done.text
+    assert "2,398.50 EUR" in done.text                                        # amount and fee left the sender's account
+    payro.sender.get("/sent/1")
+    assert len(payro.bank.payments()) == 1
+
+    after = payro.receiver.get("/").text
+    assert "Money received" in after and "+100.00 EUR" in after and "from Andrei Ionescu" in after
+    assert "420.00 EUR" in after                                              # the receiver gets the amount, not the fee
+    assert "Maria Popescu" in payro.sender.get("/").text.split("Recent")[1]   # and it is in the sender's history
 
 
-def _merge(git, branch):
-    _git(git, "-c", "user.name=Dana Engineer", "-c", "user.email=dana@payro.example", "merge", "-q", "--no-ff",
-         "--no-edit", branch)
+def test_the_fee_on_the_same_running_app_changes_after_a_human_merge(payro):
+    home = payro.sender.get("/").text
+    assert "Fee 1.50 EUR" in home and "Fee 0.50 EUR" in home                  # instant 1.50, standard 0.50
+    assert "<b>101.50 EUR</b>" in payro.sender.post("/send", data=MARIA).text
+
+    payro_merge(payro.git, payro.fee)                                         # a person merges; the app is NOT restarted
+
+    form = payro.sender.get("/").text.split("Recent")[0]
+    assert "1.50 EUR" not in form and form.count("Fee 0.50 EUR") == 2
+    done = payro.sender.post("/send", data=MARIA).text
+    assert "<b>0.50 EUR</b>" in done and "<b>100.50 EUR</b>" in done
+    assert "520.00 EUR" in payro.receiver.get("/").text                       # both payments arrived
+    assert [p.fee for p in payro.bank.payments()] == [0.5, 1.5]
 
 
-def _snapshot(git):
-    files = sorted(str(p.relative_to(git.repo)) for p in git.repo.rglob("*") if ".git" not in p.parts)
-    return _git(git, "for-each-ref"), _git(git, "status", "--porcelain"), files
-
-
-@pytest.fixture
-def world(tmp_path):
-    git = GitOps(tmp_path / "repo", tmp_path / "worktrees")
-    git.seed(settings.SANDBOX / "repo_seed")
-    fee = _branch(git, "fee", "payments/fees.yaml", "    instant: 1.50", "    instant: 0.50")
-    vop = _branch(git, "vop", "payments/transfer.py", "    validate(transfer)\n", VOP)
-    git.create_branch("run-t", "empty")                       # a branch with no change must not be listed
-    return TestClient(create_app(PayroRepo(git.repo))), git, fee, vop
-
-
-def _parts(html):
-    """(the PayRo screen, the 'what is running' box, the 'waiting for a merge' box)"""
-    screen = html.split("<div class='phone'>")[1].split("<div class='side'>")[0]
-    boxes = html.split("<div class='side'>")[1].split("<div class='law'>")
-    return screen, boxes[1], boxes[2]
-
-
-def test_quoted_law_text_is_verbatim_from_the_official_feed():
-    for note in NOTES.values():
-        official = re.sub(r"\s+", " ", (settings.FEED / f"{note['celex']}.md").read_text(encoding="utf-8"))
-        for quote in note["quotes"]:
-            assert quote in official, quote[:60]
-
-
-def test_confirming_on_code_that_never_asked_is_not_reported_as_a_confirmation(world):
-    client, _, _, _ = world
-    screen, _, _ = _parts(client.get("/?s=payee&confirmed=1").text)
-    assert "Money sent" in screen and "after the customer confirmed" not in screen
-
-
-def test_files_on_disk_that_differ_from_the_commit_are_reported(world):
-    client, git, _, _ = world
-    path = git.repo / "payments" / "fees.yaml"
-    path.write_text(path.read_text(encoding="utf-8").replace("instant: 1.50", "instant: 9.00"), encoding="utf-8")
-    screen, running, _ = _parts(client.get("/?s=fees").text)
-    assert "Fee 9.00 EUR" in screen                                           # it runs the files on disk, and says so
-    assert "1 file(s) on disk differ from this commit (payments/fees.yaml)" in running
+def test_a_standard_transfer_is_shown_as_on_its_way_and_not_yet_credited(payro):
+    done = payro.sender.post("/send", data={**MARIA, "speed": "standard"}).text
+    assert "Money sent" in done and "<b>100.50 EUR</b>" in done
+    screen = payro.receiver.get("/").text
+    assert "arrives next business day" in screen and "320.00 EUR" in screen and "Money received" not in screen
