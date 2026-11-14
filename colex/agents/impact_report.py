@@ -7,6 +7,7 @@ from colex.contracts import ImpactItem
 from colex.guardrails.validators import Rejected, check_item
 
 MAX_QUESTIONS = 3
+CRITICALITY_OPTIONS = ("Yes: it supports a critical or important function", "No: it does not")
 
 
 class Reporting:
@@ -50,26 +51,25 @@ class Reporting:
             return {"ok": True, "note": "a question about this resource is already open"}
         if len(self.questions) >= MAX_QUESTIONS:
             return {"error": "question limit reached; continue with what the documents establish"}
-        if uri:
+        kind = "general"
+        if uri:   # a question about a resource is accepted only for the one unknown the map records
             card, facts = self.tools.card(uri), self.tools.facts(uri)
             if card is None:
                 return {"error": f"'{uri}' is not a resource in the map"}
-            unknowns = []
-            if card["info_type"] == "contract" and facts.get("critical") is None:
-                unknowns.append("whether it supports a critical or important function is not assessed")
-            if card["owner_team"] is None:
-                unknowns.append("its owner is unknown")
+            if not (card["info_type"] == "contract" and facts.get("critical") is None):
+                return {"error": "the map records no unknown for this resource (for a contract: supports a critical "
+                                 f"or important function = {facts.get('critical')}); use what is recorded. If the "
+                                 "article itself is ambiguous for the company, ask without resource_uri."}
             flagged_text = " ".join(a.text for a in self.law.articles if a.id in self.flagged).lower()
-            if unknowns and card["owner_team"] is not None and "critical or important" not in flagged_text:
+            if "critical or important" not in flagged_text:
                 return {"error": "the flagged articles do not depend on whether a provider supports a critical or "
                                  "important function, so this question is not needed for this act"}
-            if not unknowns:
-                return {"error": "the map records no unknown for this resource (for a contract: criticality is "
-                                 f"{facts.get('critical')}); use what is recorded. If the article itself is "
-                                 "ambiguous for the company, ask without resource_uri."}
+            kind = "criticality"
         text = str(args.get("question", "")).strip()
         raw = args.get("options") if isinstance(args.get("options"), list) else []
         options = list(dict.fromkeys(str(o).strip()[:70] for o in raw if str(o).strip()))[:4]
+        if kind == "criticality":   # fixed answers, so the re-plan can act on them without guessing
+            options = list(CRITICALITY_OPTIONS)
         if len(text) < 10 or len(options) < 2:
             return {"error": "ask_legal needs a question and 2 to 4 distinct options"}
         known = {i["item_id"] for i in self.items}
@@ -83,7 +83,7 @@ class Reporting:
         article = args.get("article_id") if args.get("article_id") in {a.id for a in self.law.articles} else None
         qid = f"{self.prefix}q{len(self.questions) + 1}"
         self.questions.append({
-            "id": qid, "resource_uri": uri, "excerpt": excerpt,
+            "id": qid, "kind": kind, "resource_uri": uri, "excerpt": excerpt,
             "citation": f"CELEX:{self.law.celex}" + (f" {article}" if article else ""),
             "question": {"to_team": "legal", "text": text[:500], "options": options, "blocking_items": blocking}})
         self.ctx.emit("rationale", f"Missing information → asking legal: {text[:160]}", {"question_id": qid})

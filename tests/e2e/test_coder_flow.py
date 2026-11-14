@@ -23,12 +23,12 @@ BREAKS_HISTORY = {"summary": "Both euro fees set to zero.", "edits": [
 TAMPER = {"summary": "x", "edits": [{"path": "tests/compliance/test_equal_charges.py", "search": "<=", "replace": ">="}]}
 
 
-def _run(tmp_path, monkeypatch, answers):
+def _run(tmp_path, monkeypatch, answers, celex="32024R0886", **llm):
     monkeypatch.setenv("COLEX_OFFLINE", "1")
     monkeypatch.setattr(settings, "load_env", lambda path=None: None)
     engine, deps = demo.build(tmp_path / "var")
-    deps.llm = ScriptedLLM(coder_answers=answers)
-    shutil.copy(settings.FEED / "32024R0886.md", settings.inbox() / "32024R0886.md")
+    deps.llm = ScriptedLLM(coder_answers=answers, **llm)
+    shutil.copy(settings.FEED / f"{celex}.md", settings.inbox() / f"{celex}.md")
     run_id = engine.poll_feed(settings.inbox())["runs"][0]
     engine.drive(run_id)
     return engine, deps, run_id

@@ -6,6 +6,7 @@ import pytest
 from colex import settings
 from colex.agents import watcher
 from colex.agents.impact_dispatch import Dispatcher
+from colex.agents.impact_report import CRITICALITY_OPTIONS
 
 ART = "Art. 5b (inserted by Art. 1)"
 PRICING = "PayRo › Technology & Security › Configuration › Pricing configuration"
@@ -152,4 +153,5 @@ def test_questions_need_options_and_are_asked_once_per_resource(d, tools):
            "article_id": "Art. 30", "resource_uri": uri}
     assert d.call("ask_legal", ask)["question_id"] == "q1"
     assert "already open" in d.call("ask_legal", ask)["note"]
-    assert d.questions[0]["question"]["options"] == ["Yes", "No"] and len(d.questions) == 1
+    assert d.questions[0]["question"]["options"] == list(CRITICALITY_OPTIONS) and len(d.questions) == 1
+    assert d.questions[0]["kind"] == "criticality"

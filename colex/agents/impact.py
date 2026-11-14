@@ -9,7 +9,9 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from colex.agents import registers as register_step
 from colex.agents.impact_dispatch import Dispatcher
+from colex.agents.impact_report import CRITICALITY_OPTIONS
 from colex.agents.impact_loop import law_block, loop, metrics, tools_for
 from colex.contracts import LawDocument
 from colex.runtime import store
@@ -44,6 +46,16 @@ def replan(ctx, law: LawDocument, q: dict[str, Any], answer: dict[str, Any], aff
     dispatcher.seen |= scope
     dispatcher.scope = scope
     said = answer.get("decision") or answer.get("text") or ""
+    if q.get("kind") == "criticality" and uri and said in CRITICALITY_OPTIONS:
+        # The answer changes one fact about one contract; what follows from it is in the map. No model call.
+        critical = said == CRITICALITY_OPTIONS[0]
+        item = register_step.critical_contract_item(ctx, law, uri, f"{q['id']}-i1") if critical else None
+        ctx.emit("rationale", f"Legal answered \"{said}\" for {uri} → " + (
+            "the Art. 30(3) clauses now apply; re-planned this contract only" if item else
+            "no further clause applies; nothing to change") + ". Other branches untouched.",
+            {"question_id": q["id"], "scope": [uri]})
+        return {"items": [item] if item else [], "dropped": [], "complete": True, "answer": said, "scope": [uri],
+                "deterministic": True}
     shown = ""
     if uri and tools.card(uri):
         first = dispatcher.call("list_resources", {"path": tools.card(uri)["primary_path"],
