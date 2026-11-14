@@ -1,0 +1,40 @@
+{
+ "agent": "triage",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": "{\n  \"relevance\": 1.0,\n  \"reason\": \"The company is a payment institution providing payment services including credit transfers and instant credit transfers in euro and RON, directly covered by the Regulation amending rules on instant credit transfers in euro.\",\n  \"articles_flagged\": [\n    \"Art. 1\",\n    \"Art. 5a\",\n    \"Art. 5b\",\n    \"Art. 5c\",\n    \"Art. 5d\",\n    \"Art. 35a\",\n    \"Art. 5\"\n  ],\n  \"matched_profile_facts\": [\n    \"entity_type: payment institution\",\n    \"activity: payment services\",\n    \"activity: credit transfers\",\n    \"activity: instant credit transfers in euro and RON\"\n  ]\n}",
+     "refusal": null,
+     "reasoning": null
+    },
+    "finish_reason": "stop"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 2224,
+   "completion_tokens": 163,
+   "total_tokens": 2387,
+   "cost": 0.0011504,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0011504,
+    "upstream_inference_prompt_cost": 0.0008896,
+    "upstream_inference_completions_cost": 0.0002608
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

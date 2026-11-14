@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_iKBkBfXF54WM4tHt2NTO3XQX",
+       "function": {
+        "name": "report_impact",
+        "arguments": "{\"article_id\":\"Art. 5\",\"resource_uri\":\"confluence://ENG/incident-procedure.md\",\"start\":7,\"end\":12,\"quote\":\"7: ## 1. Detection and classification\\n8: The on-call engineer records the incident in Jira and classifies it as minor or major within one business day.\\n9: \\n10: ## 2. Reporting to the National Bank of Romania\\n11: For a major incident the Head of Security sends an initial report within 24 hours of detecting the incident.\\n12: A final report is sent within 30 days of the initial report.\",\"obligation\":\"Update the ICT Incident Procedure to ensure initial notification is sent as early as possible and within 4 hours from classification of the incident as major, not just within 24 hours of detection, to comply with Art. 5(a).\",\"action\":\"POLICY_UPDATE\",\"confidence\":0.9}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 11017,
+   "completion_tokens": 198,
+   "total_tokens": 11215,
+   "cost": 0.0016132,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 10368,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0016132,
+    "upstream_inference_prompt_cost": 0.0012964,
+    "upstream_inference_completions_cost": 0.0003168
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

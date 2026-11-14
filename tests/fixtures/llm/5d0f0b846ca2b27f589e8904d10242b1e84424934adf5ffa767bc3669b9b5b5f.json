@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_uVUGv7H21LfZRZQ8GBJJXXXn",
+       "function": {
+        "name": "ask_legal",
+        "arguments": "{\"question\":\"Does the code in 'repo://payments/providers.py' fully support the management and monitoring of ICT third-party risks as required by Art. 28 of Regulation (EU) 2022/2554, including criticality assessment and contractual compliance?\",\"options\":[\"Yes, it fully supports\",\"Partially supports, needs improvements\",\"No, it does not support\",\"Unknown\"],\"article_id\":\"Art. 28\",\"rationale\":\"Code review inconclusive for full Art. 28 compliance; ask legal for confirmation\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 21421,
+   "completion_tokens": 117,
+   "total_tokens": 21538,
+   "cost": 0.0023812,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 21248,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0023812,
+    "upstream_inference_prompt_cost": 0.002194,
+    "upstream_inference_completions_cost": 0.0001872
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

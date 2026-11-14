@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_ifrRgD6Zhcflh88ZPcy6VBoP",
+       "function": {
+        "name": "list_resources",
+        "arguments": "{\"path\":\"payments/providers.py\",\"rationale\":\"Check code in payments/providers.py for implementation of payee verification service mentioned in PAY-214 ticket\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 9547,
+   "completion_tokens": 40,
+   "total_tokens": 9587,
+   "cost": 0.001118,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 9216,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.001118,
+    "upstream_inference_prompt_cost": 0.001054,
+    "upstream_inference_completions_cost": 6.4e-05
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

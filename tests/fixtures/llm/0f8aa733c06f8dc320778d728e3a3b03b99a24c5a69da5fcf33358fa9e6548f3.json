@@ -1,0 +1,105 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_O2TYlcCVACG7pYgt84K8ntQy",
+       "function": {
+        "name": "browse",
+        "arguments": "{\"path\":\"PayRo › Legal & Compliance › Contracts\",\"rationale\":\"Art. 30 requires review of ICT third-party service provider contracts for key contractual provisions\"}"
+       }
+      },
+      {
+       "type": "function",
+       "index": 1,
+       "id": "call_XekJlRgB7NhQX3GskghicHh5",
+       "function": {
+        "name": "browse",
+        "arguments": "{\"path\":\"PayRo › Legal & Compliance › Customer terms\",\"rationale\":\"Art. 19 requires review of client notification terms for ICT-related incidents\"}"
+       }
+      },
+      {
+       "type": "function",
+       "index": 2,
+       "id": "call_3dKHw3YYDn8hFNXfR1y3eVDP",
+       "function": {
+        "name": "browse",
+        "arguments": "{\"path\":\"PayRo › Legal & Compliance › Policies\",\"rationale\":\"Art. 28 requires review of ICT third-party risk management policies\"}"
+       }
+      },
+      {
+       "type": "function",
+       "index": 3,
+       "id": "call_TxckLXIlDKf4au7vkEgBpzd6",
+       "function": {
+        "name": "browse",
+        "arguments": "{\"path\":\"PayRo › Technology & Security › Procedures\",\"rationale\":\"Art. 19 and Art. 28 require review of ICT incident reporting and ICT risk management procedures\"}"
+       }
+      },
+      {
+       "type": "function",
+       "index": 4,
+       "id": "call_UyF3i7XIkbER8pQcC3AzH18s",
+       "function": {
+        "name": "browse",
+        "arguments": "{\"path\":\"PayRo › Technology & Security › Code\",\"rationale\":\"Art. 30 requires review of code related to ICT third-party service provider management and monitoring\"}"
+       }
+      },
+      {
+       "type": "function",
+       "index": 5,
+       "id": "call_81gRqjPNdDZlVewtviicLwV2",
+       "function": {
+        "name": "browse",
+        "arguments": "{\"path\":\"PayRo › Payments › Fee schedules\",\"rationale\":\"Art. 2 confirms company is a payment institution, so fee schedules may need review for ICT-related fees\"}"
+       }
+      },
+      {
+       "type": "function",
+       "index": 6,
+       "id": "call_4wf6ccAW1WUCVXYmqICuCRQv",
+       "function": {
+        "name": "browse",
+        "arguments": "{\"path\":\"PayRo › Technology & Security › Configuration\",\"rationale\":\"Art. 30 requires review of configuration related to ICT third-party service provider contracts and monitoring\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 6713,
+   "completion_tokens": 313,
+   "total_tokens": 7026,
+   "cost": 0.0014196,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 5888,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0014196,
+    "upstream_inference_prompt_cost": 0.0009188,
+    "upstream_inference_completions_cost": 0.0005008
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

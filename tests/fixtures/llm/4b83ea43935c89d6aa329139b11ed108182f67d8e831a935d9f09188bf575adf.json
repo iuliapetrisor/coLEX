@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_aM3Sbxy9dpIErVE09wWGDGij",
+       "function": {
+        "name": "report_impact",
+        "arguments": "{\"article_id\":\"Art. 19\",\"resource_uri\":\"confluence://ENG/incident-procedure.md\",\"start\":14,\"end\":15,\"quote\":\"14: ## 3. Communication\\n15: Customers are informed through the status page. Past incidents: see PAY-101.\",\"obligation\":\"The ICT Incident Procedure must be updated to explicitly require informing clients without undue delay about major ICT-related incidents impacting their financial interests, as required by Art. 19(3).\",\"action\":\"POLICY_UPDATE\",\"confidence\":0.9}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 16826,
+   "completion_tokens": 120,
+   "total_tokens": 16946,
+   "cost": 0.0019688,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 16512,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0019688,
+    "upstream_inference_prompt_cost": 0.0017768,
+    "upstream_inference_completions_cost": 0.000192
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

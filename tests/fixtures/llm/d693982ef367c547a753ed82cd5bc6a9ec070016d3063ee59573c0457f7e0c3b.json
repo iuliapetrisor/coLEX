@@ -1,0 +1,87 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_WpTY9ECAN9AiHyrMXA5fY7NU",
+       "function": {
+        "name": "list_resources",
+        "arguments": "{\"path\":\"PayRo › Legal & Compliance › Contracts › ICT provider contracts\",\"rationale\":\"List all ICT provider contracts to check for Art. 30 contractual provisions and gaps\"}"
+       }
+      },
+      {
+       "type": "function",
+       "index": 1,
+       "id": "call_uKMNx7KKkrSYt2Y9ejnTAzrn",
+       "function": {
+        "name": "list_resources",
+        "arguments": "{\"path\":\"PayRo › Legal & Compliance › Customer terms › Terms and conditions\",\"rationale\":\"List customer terms to check for Art. 19 client notification obligations\"}"
+       }
+      },
+      {
+       "type": "function",
+       "index": 2,
+       "id": "call_FLLr2p8XYFo1eQPy1Oby5h2s",
+       "function": {
+        "name": "list_resources",
+        "arguments": "{\"path\":\"PayRo › Technology & Security › ICT third parties\",\"rationale\":\"List ICT third party related procedures and code to check for Art. 28 and Art. 30 compliance\"}"
+       }
+      },
+      {
+       "type": "function",
+       "index": 3,
+       "id": "call_EB6h6REZ3ZEfZ2agLh9KKwOO",
+       "function": {
+        "name": "list_resources",
+        "arguments": "{\"path\":\"PayRo › Technology & Security › Incident management\",\"rationale\":\"List incident management procedures and code to check for Art. 19 reporting obligations\"}"
+       }
+      },
+      {
+       "type": "function",
+       "index": 4,
+       "id": "call_MYbo89jTBxhhzafuRwpY7Ewy",
+       "function": {
+        "name": "list_resources",
+        "arguments": "{\"path\":\"PayRo › Technology & Security › Configuration › Pricing configuration\",\"rationale\":\"List pricing configuration to check for ICT-related fees under Art. 2 scope\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 7975,
+   "completion_tokens": 238,
+   "total_tokens": 8213,
+   "cost": 0.001574,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 6656,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.001574,
+    "upstream_inference_prompt_cost": 0.0011932,
+    "upstream_inference_completions_cost": 0.0003808
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

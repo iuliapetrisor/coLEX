@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_cvtDm4QzRwKx5j45zsbPL0Lv",
+       "function": {
+        "name": "read",
+        "arguments": "{\"uri\":\"gdrive://product/terms-and-conditions.md\",\"start\":1,\"end\":24,\"rationale\":\"Read PayRo Terms and Conditions to check for compliance with instant credit transfer service offering and charges rules\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 12106,
+   "completion_tokens": 54,
+   "total_tokens": 12160,
+   "cost": 0.001396,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 11776,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.001396,
+    "upstream_inference_prompt_cost": 0.0013096,
+    "upstream_inference_completions_cost": 8.64e-05
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

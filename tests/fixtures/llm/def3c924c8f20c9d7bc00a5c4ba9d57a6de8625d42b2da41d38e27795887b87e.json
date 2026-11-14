@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_68ZTgQWWIko5dBpUMeLXEEay",
+       "function": {
+        "name": "read",
+        "arguments": "{\"uri\":\"repo://payments/transfer.py\",\"start\":41,\"end\":44,\"rationale\":\"Continue reading code for authorisation of customer transfers to check implementation of payee verification and instant credit transfer compliance\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 9285,
+   "completion_tokens": 52,
+   "total_tokens": 9337,
+   "cost": 0.0012244,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 8576,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0012244,
+    "upstream_inference_prompt_cost": 0.0011412,
+    "upstream_inference_completions_cost": 8.32e-05
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_YO1OOjwxwg6aFl6Rukp81LzC",
+       "function": {
+        "name": "report_impact",
+        "arguments": "{\"article_id\":\"Art. 30\",\"resource_uri\":\"onedrive://legal/contracts/sms-otp-smsnord.md\",\"start\":27,\"end\":28,\"quote\":\"27: ## 6. Assistance in ICT incidents\\n28: The Provider assists PayRo during an ICT incident at a cost determined ex-ante in Annex 2.\",\"obligation\":\"The contract must be updated to ensure the assistance in ICT incidents is provided at no additional cost or at a cost determined ex-ante, as required by Art. 30(2)(f).\",\"action\":\"CONTRACT_REVIEW\",\"confidence\":0.95}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 14685,
+   "completion_tokens": 138,
+   "total_tokens": 14823,
+   "cost": 0.001794,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 14336,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.001794,
+    "upstream_inference_prompt_cost": 0.0015732,
+    "upstream_inference_completions_cost": 0.0002208
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

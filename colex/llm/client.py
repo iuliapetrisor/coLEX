@@ -98,6 +98,9 @@ class LLMClient:
         for folder in places:
             path = folder / f"{key}.json"
             if path.is_file():
+                if self.mode == "record" and folder != settings.CASSETTES:
+                    settings.CASSETTES.mkdir(parents=True, exist_ok=True)
+                    (settings.CASSETTES / path.name).write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
                 return json.loads(path.read_text(encoding="utf-8"))["response"]
         return None
 

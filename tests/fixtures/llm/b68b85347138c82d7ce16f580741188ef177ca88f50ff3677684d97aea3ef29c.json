@@ -1,0 +1,40 @@
+{
+ "agent": "coder",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": "{\"summary\": \"Implement initial report deadline logic to be the earlier of 24 hours after awareness or 4 hours after classification, add intermediate report 72 hours after initial, and final report 30 days after intermediate, per Art. 19(4).\", \"edits\": [{\"path\": \"payments/incidents.py\", \"search\": \"INITIAL_REPORT_HOURS = 24\\nFINAL_REPORT_DAYS = 30\\n\\n\\ndef initial_report_deadline(aware_at: datetime, classified_at: datetime) -> datetime:\\n    \\\"\\\"\\\"When the initial notification of a major incident is due.\\\"\\\"\\\"\\n    return aware_at + timedelta(hours=INITIAL_REPORT_HOURS)\\n\\n\\ndef final_report_deadline(previous_report_at: datetime) -> datetime:\\n    \\\"\\\"\\\"When the final report is due, counted from the previous report.\\\"\\\"\\\"\\n    return previous_report_at + timedelta(days=FINAL_REPORT_DAYS)\\n\\n\\ndef reporting_plan(aware_at: datetime, classified_at: datetime) -> list[dict]:\\n    \\\"\\\"\\\"The reports to send for one major incident, in order, each with its due time.\\\"\\\"\\\"\\n    initial = initial_report_deadline(aware_at, classified_at)\\n    return [\\n        {\\\"report\\\": \\\"initial\\\", \\\"due\\\": initial},\\n        {\\\"report\\\": \\\"final\\\", \\\"due\\\": final_report_deadline(initial)},\\n    ]\\n\", \"replace\": \"INITIAL_REPORT_HOURS = 24\\nFINAL_REPORT_DAYS = 30\\nINTERMEDIATE_REPORT_HOURS = 72\\n\\n\\ndef initial_report_deadline(aware_at: datetime, classified_at: datetime) -> datetime:\\n    \\\"\\\"\\\"When the initial notification of a major incident is due.\\\"\\\"\\\"\\n    # Initial notification is due no later than 24 hours after awareness\\n    # or within 4 hours after classification if classification is later\\n    deadline_24h = aware_at + timedelta(hours=INITIAL_REPORT_HOURS)\\n    deadline_4h_after_classification = classified_at + timedelta(hours=4)\\n    # The initial report deadline is the earlier of these two\\n    return min(deadline_24h, deadline_4h_after_classification)\\n\\n\\ndef final_report_deadline(previous_report_at: datetime) -> datetime:\\n    \\\"\\\"\\\"When the final report is due, counted from the previous report.\\\"\\\"\\\"\\n    return previous_report_at + timedelta(days=FINAL_REPORT_DAYS)\\n\\n\\ndef reporting_plan(aware_at: datetime, classified_at: datetime) -> list[dict]:\\n    \\\"\\\"\\\"The reports to send for one major incident, in order, each with its due time.\\\"\\\"\\\"\\n    initial = initial_report_deadline(aware_at, classified_at)\\n    intermediate = initial + timedelta(hours=INTERMEDIATE_REPORT_HOURS)\\n    final = final_report_deadline(intermediate)\\n    return [\\n        {\\\"report\\\": \\\"initial\\\", \\\"due\\\": initial},\\n        {\\\"report\\\": \\\"intermediate\\\", \\\"due\\\": intermediate},\\n        {\\\"report\\\": \\\"final\\\", \\\"due\\\": final},\\n    ]\\n\"}]}",
+     "refusal": null,
+     "reasoning": null
+    },
+    "finish_reason": "stop"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 4269,
+   "completion_tokens": 663,
+   "total_tokens": 4932,
+   "cost": 0.0016548,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 3712,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0016548,
+    "upstream_inference_prompt_cost": 0.000594,
+    "upstream_inference_completions_cost": 0.0010608
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "agent": "triage",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": "{\n  \"relevance\": 1.0,\n  \"reason\": \"The act applies to financial entities, and the company is a payment institution (a type of financial entity) operating in the EU, thus it creates obligations for the company regarding ICT-related incident notifications.\",\n  \"articles_flagged\": [\"Art. 1\", \"Art. 2\", \"Art. 3\", \"Art. 4\", \"Art. 5\", \"Art. 6\"],\n  \"matched_profile_facts\": [\"payment institution\", \"regulated financial entity\", \"EU\"]\n}",
+     "refusal": null,
+     "reasoning": null
+    },
+    "finish_reason": "stop"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 1606,
+   "completion_tokens": 118,
+   "total_tokens": 1724,
+   "cost": 0.0008312,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0008312,
+    "upstream_inference_prompt_cost": 0.0006424,
+    "upstream_inference_completions_cost": 0.0001888
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

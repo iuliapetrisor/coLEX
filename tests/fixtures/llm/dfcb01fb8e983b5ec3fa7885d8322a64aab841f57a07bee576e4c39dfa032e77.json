@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_1Wxd12QqpSZ1R65btHOSbxDH",
+       "function": {
+        "name": "report_impact",
+        "arguments": "{\"article_id\":\"Art. 19\",\"resource_uri\":\"confluence://ENG/incident-procedure.md\",\"start\":1,\"end\":18,\"quote\":\"3: # ICT Incident Procedure\\n5: Status: active · Last reviewed: 2024-03-10\\n7: ## 1. Detection and classification\\n8: The on-call engineer records the incident in Jira and classifies it as minor or major within one business day.\\n10: ## 2. Reporting to the National Bank of Romania\\n11: For a major incident the Head of Security sends an initial report within 24 hours of detecting the incident.\\n12: A final report is sent within 30 days of the initial report.\\n14: ## 3. Communication\\n15: Customers are informed through the status page. Past incidents: see PAY-101.\\n18: Deadlines are computed by `payments/incidents.py`.\",\"obligation\":\"The ICT Incident Procedure must explicitly include the obligation to inform clients without undue delay about major ICT-related incidents impacting their financial interests, as required by Art. 19(3).\",\"action\":\"POLICY_UPDATE\",\"confidence\":0.9}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 16337,
+   "completion_tokens": 249,
+   "total_tokens": 16586,
+   "cost": 0.0021716,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 15872,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0021716,
+    "upstream_inference_prompt_cost": 0.0017732,
+    "upstream_inference_completions_cost": 0.0003984
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

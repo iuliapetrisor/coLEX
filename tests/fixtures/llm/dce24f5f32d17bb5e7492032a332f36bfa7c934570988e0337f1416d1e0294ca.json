@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_ayZMcqrdOxkP3IQ38SVnJhNi",
+       "function": {
+        "name": "report_impact",
+        "arguments": "{\"article_id\":\"Art. 30\",\"resource_uri\":\"onedrive://legal/contracts/cloud-hosting-aws.md\",\"start\":1,\"end\":40,\"quote\":\"1: > FICTIONAL – PayRo SRL is a fabricated company for the coLEX demo\\n3: # Cloud Hosting Services Agreement\\n5: Parties: PayRo SRL and Amazon Web Services EMEA SARL\\n6: Contract ID: CTR-2023-001\\n7: Status: active · Effective: 2023-03-01 · Renewal: 2026-03-01\\n8: Services: cloud hosting of the production payment platform and document storage\\n9: Supports a critical or important function: yes\\n13: ## 1. Services and functions\\n14: The Provider hosts the PayRo payment platform. Subcontracting of a critical function requires PayRo's prior written consent.\\n16: ## 2. Locations of data processing\\n17: Services are provided and data is processed and stored in Germany and Ireland. The Provider notifies PayRo in advance of any change of location.\\n19: ## 3. Data protection\\n20: The Provider ensures the availability, authenticity, integrity and confidentiality of PayRo data, including personal data.\\n22: ## 4. Access, recovery and return of data\\n23: On insolvency, discontinuation or termination, PayRo can access, recover and receive all its data in an easily accessible format.\\n25: ## 5. Service levels\\n26: Service level: 99.95% monthly availability, with quantitative performance targets and service credits. Service levels are reviewed yearly.\\n28: ## 6. Assistance in ICT incidents\\n29: The Provider assists PayRo at no additional cost when an ICT incident related to the services occurs.\\n31: ## 7. Cooperation with competent authorities\\n32: The Provider fully cooperates with the competent authorities and resolution authorities of PayRo.\\n34: ## 8. Termination\\n35: PayRo may terminate with 90 days' notice, or immediately on a material breach.\\n37: ## 9. Security awareness and training\\n38: Provider staff take part in PayRo's ICT security awareness programmes and digital operational resilience training.\\n40: ## 10. Notice and reporting obligations\\n40: The Provider reports without delay any development that may materially affect its ability to meet the agreed service levels.\",\"obligation\":\"The Cloud Hosting Services Agreement complies with Art. 30 requirements for contracts supporting critical or important functions, including service levels, reporting, contingency plans, TLPT participation, and audit rights.\",\"action\":\"CONTRACT_REVIEW\",\"confidence\":1}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 22845,
+   "completion_tokens": 555,
+   "total_tokens": 23400,
+   "cost": 0.0033828,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 22144,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0033828,
+    "upstream_inference_prompt_cost": 0.0024948,
+    "upstream_inference_completions_cost": 0.000888
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

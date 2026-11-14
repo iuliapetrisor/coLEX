@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_7B1Mj07jNQtTBKm5NHdEMHGj",
+       "function": {
+        "name": "read",
+        "arguments": "{\"uri\":\"onedrive://shared/vendor-kyc-agreement.md\",\"start\":1,\"end\":20,\"rationale\":\"Read beginning of Identity Verification Services Agreement to check for clauses on payee verification obligations, missing clause 30(2)(b)\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 11155,
+   "completion_tokens": 62,
+   "total_tokens": 11217,
+   "cost": 0.0012588,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 11008,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0012588,
+    "upstream_inference_prompt_cost": 0.0011596,
+    "upstream_inference_completions_cost": 9.92e-05
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

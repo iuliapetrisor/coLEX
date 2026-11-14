@@ -1,0 +1,40 @@
+{
+ "agent": "triage",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": "{\n  \"relevance\": 1.0,\n  \"reason\": \"The act explicitly applies to payment institutions, which matches the company's entity type, and covers ICT risk management and incident reporting obligations relevant to the company's use of ICT third-party providers.\",\n  \"articles_flagged\": [\"Art. 2\", \"Art. 19\", \"Art. 28\", \"Art. 30\"],\n  \"matched_profile_facts\": [\"entity_type: payment institution\", \"uses_ict_third_party_providers\"]\n}",
+     "refusal": null,
+     "reasoning": null
+    },
+    "finish_reason": "stop"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 1728,
+   "completion_tokens": 107,
+   "total_tokens": 1835,
+   "cost": 0.0008624,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0008624,
+    "upstream_inference_prompt_cost": 0.0006912,
+    "upstream_inference_completions_cost": 0.0001712
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

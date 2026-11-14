@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_nRfRtWmmR9Q6HKDY76uDVjVl",
+       "function": {
+        "name": "browse",
+        "arguments": "{\"path\":\"PayRo › Legal & Compliance › Customer terms\",\"rationale\":\"Check customer terms for ICT-related incident notification obligations as per Art. 1 to Art. 6.\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 8499,
+   "completion_tokens": 48,
+   "total_tokens": 8547,
+   "cost": 0.0010188,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 8192,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0010188,
+    "upstream_inference_prompt_cost": 0.000942,
+    "upstream_inference_completions_cost": 7.68e-05
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

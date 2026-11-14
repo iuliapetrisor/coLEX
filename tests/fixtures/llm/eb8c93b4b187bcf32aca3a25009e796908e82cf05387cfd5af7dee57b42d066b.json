@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_s8S2aP5DEFspm9W5TFK59iQq",
+       "function": {
+        "name": "read",
+        "arguments": "{\"uri\":\"repo://payments/providers.py\",\"start\":1,\"end\":51,\"rationale\":\"Read code for third-party ICT provider integrations to check implementation of payee verification and instant credit transfer services\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 15453,
+   "completion_tokens": 50,
+   "total_tokens": 15503,
+   "cost": 0.0017684,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 14976,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0017684,
+    "upstream_inference_prompt_cost": 0.0016884,
+    "upstream_inference_completions_cost": 8e-05
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}

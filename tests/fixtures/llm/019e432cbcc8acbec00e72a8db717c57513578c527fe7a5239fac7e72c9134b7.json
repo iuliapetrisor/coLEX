@@ -1,0 +1,51 @@
+{
+ "agent": "impact",
+ "model": "openai/gpt-4.1-mini",
+ "response": {
+  "choices": [
+   {
+    "message": {
+     "role": "assistant",
+     "content": null,
+     "refusal": null,
+     "reasoning": null,
+     "tool_calls": [
+      {
+       "type": "function",
+       "index": 0,
+       "id": "call_qMnEsLUZv4lHaInD4FwIe2yY",
+       "function": {
+        "name": "read",
+        "arguments": "{\"uri\":\"gdrive://product/terms-and-conditions.md\",\"start\":1,\"end\":24,\"rationale\":\"Read customer terms to check for client notification obligations under Art. 19\"}"
+       }
+      }
+     ]
+    },
+    "finish_reason": "tool_calls"
+   }
+  ],
+  "usage": {
+   "prompt_tokens": 14842,
+   "completion_tokens": 49,
+   "total_tokens": 14891,
+   "cost": 0.0016376,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 14592,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0016376,
+    "upstream_inference_prompt_cost": 0.0015592,
+    "upstream_inference_completions_cost": 7.84e-05
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+}
