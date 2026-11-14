@@ -18,7 +18,6 @@ def test_timestamps_without_timezone_are_rejected(name):
         getattr(c, name).model_validate({**VALID[name], "ts": NAIVE_TS})
 
 
-@pytest.mark.xfail(strict=True, reason="R-004")
 @pytest.mark.parametrize(
     "owner_team, ownership_source",
     [(None, "explicit"), (None, "inferred"), ("legal", "unknown")],

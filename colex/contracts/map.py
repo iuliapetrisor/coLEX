@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from colex.contracts.common import Confidence, Contract, Evidence, LineRange, NonBlank, NonNegInt
 
@@ -83,6 +83,12 @@ class ResourceCard(Contract):
     classification_confidence: Confidence
     sha: NonBlank
     map_version_id: NonBlank
+
+    @model_validator(mode="after")
+    def _ownership_is_consistent(self) -> "ResourceCard":
+        if (self.owner_team is None) != (self.ownership_source == "unknown"):
+            raise ValueError('owner_team must be empty exactly when ownership_source is "unknown"')
+        return self
 
 
 class Counterparty(Contract):
