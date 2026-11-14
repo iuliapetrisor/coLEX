@@ -59,3 +59,10 @@ slack-check: setup
 .PHONY: eval
 eval: setup
 	COLEX_OFFLINE=$(if $(LIVE),,1) $(BIN)/python tests/eval/run_eval.py
+
+# The fictional PayRo customer app: runs the real payments code of main and of a coLEX branch, side by side.
+# Reads the sandbox repository of the demo state (var/demo/repo). Local only, no login.
+PAYRO_PORT ?= 8001
+.PHONY: payro
+payro: setup
+	COLEX_VAR=var/demo PAYRO_PORT=$(PAYRO_PORT) $(BIN)/python -m payro_app.server

@@ -59,6 +59,7 @@ For whoever continues this build (including the orchestrator after a context res
   hits its 40-step limit; trimming old tool results from the message list is the obvious fix. (3) A larger sandbox,
   to test whether the map saves context at all. (4) The other chaos scenarios, demo script, runbook.
 - After changing a prompt or any text the model sees: `make demo`, then `make record`, or the offline test fails.
+- Session 3 added `payro_app/` (`make payro`, D-023): a fictional customer app that runs the real code of two versions of the sandbox repository side by side. Open issue from the humans' Slack run, not fixed: the analyst can send legal a question about code when it names the file only in the question text (`impact_report.ask`).
 
 ## Design notes
 

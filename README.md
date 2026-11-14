@@ -16,6 +16,7 @@ make test             # offline
 make demo OFFLINE=1   # the whole scenario from recorded model answers, no network
 make demo             # same with OpenRouter (needs OPENROUTER_API_KEY in .env; see .env.example)
 make console          # Console on http://127.0.0.1:8000 over the demo state (no login: local use only)
+make payro            # fictional PayRo app on http://127.0.0.1:8001: main and a coLEX branch side by side
 make eval             # score the recorded run against the ground truth → docs/RESULTS.md
 make slack-check      # read-only check of the Slack workspace connection
 ```
