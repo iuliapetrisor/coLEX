@@ -48,6 +48,36 @@ MIGRATIONS: list[str] = [
         path text not null, status text not null, reason text, run_id text, triage_json text,
         doc_json text not null, ts text not null);
     """,
+    """
+    create table map_versions (version_id text primary key, ts text not null, stats_json text not null);
+    create table nodes (mv text not null, node_id text not null, parent_id text, level text not null,
+        name text not null, path text not null, summary text not null default '', rollup_json text not null default '{}',
+        primary key (mv, node_id));
+    create table resources (mv text not null, uri text not null, source text not null, path text not null,
+        title text not null, info_type text not null, primary_path text, card_json text not null,
+        facts_json text not null, body text not null, sha text not null, primary key (mv, uri));
+    create table resource_nodes (mv text not null, uri text not null, node_path text not null, kind text not null);
+    create table fragments (mv text not null, uri text not null, title text not null, kind text not null,
+        start integer not null, end integer not null);
+    create table entities (mv text not null, uri text not null, etype text not null, value text not null,
+        line integer not null, snippet text not null);
+    create table counterparties (mv text not null, cp_id text not null, body_json text not null,
+        primary key (mv, cp_id));
+    create table resource_counterparties (mv text not null, uri text not null, cp_id text not null,
+        line integer not null);
+    create table edges (mv text not null, src text not null, dst text not null, kind text not null,
+        ev_uri text not null, ev_start integer not null, ev_end integer not null);
+    create table review_queue (mv text not null, kind text not null, uri text not null, detail text not null);
+    create table learned_rules (glob text primary key, node_path text not null, author text not null, ts text not null);
+    create table obligations (id integer primary key autoincrement, citation text not null, obligation text not null,
+        node_path text, uri text, start integer, end integer, status text not null, owner_team text,
+        deadline text, run_id text, item_id text, ts text not null);
+    create virtual table fragments_fts using fts5(body, title, uri unindexed, mv unindexed, start unindexed,
+        end unindexed, tokenize="unicode61 remove_diacritics 2");
+    create index entities_idx on entities(mv, etype, value);
+    create index edges_src on edges(mv, src);
+    create index edges_dst on edges(mv, dst);
+    """,
 ]
 
 

@@ -24,3 +24,8 @@ test: setup
 .PHONY: demo
 demo: setup
 	COLEX_OFFLINE=$(OFFLINE) $(BIN)/python -m colex.demo
+
+# Build the Company Map from the sandbox sources.
+.PHONY: map
+map: setup
+	$(BIN)/python -m colex.map
