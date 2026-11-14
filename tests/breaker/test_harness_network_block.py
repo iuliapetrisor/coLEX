@@ -6,12 +6,9 @@ from __future__ import annotations
 
 import socket
 
-import pytest
-
 from tests.conftest import _blocked
 
 
-@pytest.mark.xfail(strict=True, reason="R-001")
 def test_all_dns_entry_points_are_blocked():
     unblocked = [
         name

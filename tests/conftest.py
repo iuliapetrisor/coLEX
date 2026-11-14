@@ -18,14 +18,18 @@ def _blocked(*_args, **_kwargs):
     raise NetworkBlocked("make test is offline: network access is blocked by tests/conftest.py")
 
 
+# Every name-resolution function of the socket module (R-001).
+_RESOLVERS = ("getaddrinfo", "gethostbyname", "gethostbyname_ex", "gethostbyaddr", "getnameinfo")
+
+
 @pytest.fixture(scope="session", autouse=True)
 def _no_network():
     patch = pytest.MonkeyPatch()
     for name in ("connect", "connect_ex", "sendto", "sendmsg"):
         patch.setattr(socket.socket, name, _blocked)
     patch.setattr(socket, "create_connection", _blocked)
-    patch.setattr(socket, "getaddrinfo", _blocked)
-    patch.setattr(socket, "gethostbyname", _blocked)
+    for name in _RESOLVERS:
+        patch.setattr(socket, name, _blocked)
     yield
     patch.undo()
 
