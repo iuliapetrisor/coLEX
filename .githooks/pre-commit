@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# coLEX pre-commit hook (G0-SEC-01). Automates steps 2-4 of docs/roles/README.md §3b.
+# Enable once per clone:  git config core.hooksPath .githooks
+# Never bypass it with --no-verify.
+#
+# Token rule (D-011, open): a string counts as a secret when a known token prefix is
+# followed by 10 or more token characters. Bare prefixes in documentation are allowed.
+# The hook prints file names only, never the matching text.
+set -u
+
+TOKEN_RE='(xox[a-z]|xapp|sk-or)-[A-Za-z0-9_-]{10,}'
+PATH_RE='(^|/)\.env(\.[^/]*)?$|\.(db|sqlite|sqlite3)$|(^|/)var/|(^|/)__pycache__/'
+fail=0
+
+while IFS= read -r -d '' f; do
+  case "$f" in
+    .env.example|*/.env.example) ;;
+    *)
+      if printf '%s\n' "$f" | grep -qE "$PATH_RE"; then
+        echo "pre-commit: forbidden path staged: $f" >&2
+        fail=1
+      fi
+      ;;
+  esac
+  if git show ":$f" 2>/dev/null | grep -aqE "$TOKEN_RE"; then
+    echo "pre-commit: token-shaped secret in staged file: $f" >&2
+    fail=1
+  fi
+  case "$f" in
+    colex/*)
+      if git show ":$f" 2>/dev/null | grep -aq "_ground_truth"; then
+        echo "pre-commit: runtime code must not reference the hidden ground truth: $f" >&2
+        fail=1
+      fi
+      ;;
+  esac
+done < <(git diff --cached --name-only -z --diff-filter=ACMR)
+
+if [ "$fail" -ne 0 ]; then
+  echo "pre-commit: commit blocked. Fix the files listed above. Do not use --no-verify." >&2
+  exit 1
+fi
+exit 0
