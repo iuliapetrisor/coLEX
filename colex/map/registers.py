@@ -21,6 +21,7 @@ COLUMNS = ["contract_id", "provider", "provider_id", "services", "supports_criti
            "data_processing_locations", "subcontractors", "contract_status", "effective_date", "renewal_date",
            "owner_team", "missing_clauses_art_30_2", "missing_clauses_art_30_3", "to_check_if_critical", "source_uri"]
 CRITICAL = {True: "yes", False: "no", None: "not assessed"}
+DORA_CELEX = "32022R2554"   # the act the Art. 30 checklist belongs to
 
 
 def checklist() -> dict[str, dict[str, Any]]:

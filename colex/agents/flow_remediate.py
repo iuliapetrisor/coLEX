@@ -14,6 +14,9 @@ def remediate(deps, run_id: str, law, item: dict[str, Any]) -> None:
     for rnd in range(1, cfg["budgets"]["max_coder_iterations"] + 1):
         out = rt.step(run_id, bid, "REMEDIATE", lambda c: coder.run(c, law, item, list(feedback), deps),
                       key=f"{bid}:REMEDIATE:{rnd}", agent="coder")
+        if out.get("covered_by"):   # another item's change request fixes this one too
+            rt.set_branch(run_id, bid, "done")
+            return
         change = ChangeRequest(**{k: out["change"][k] for k in CR_FIELDS})
         channel = cfg["routing"]["review_channel"]
         if change.status == "needs_human":

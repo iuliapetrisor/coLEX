@@ -17,13 +17,16 @@ def files(worktree, paths: list[str]) -> str:
 
 
 def brief(item: dict[str, Any], article: str, allowed: list[str], wanted: list[str], before: dict[str, Any],
-          feedback: list[str]) -> str:
+          feedback: list[str], worktree=None) -> str:
     """The fixed part of the coder's instructions for one item."""
     text = (f"Impact item: {json.dumps({k: item.get(k) for k in ITEM_FIELDS}, ensure_ascii=False)}\n\n"
             f"Cited article:\n{article}\n\nEditable files: {json.dumps(allowed)}\n"
             f"Tests that must pass after your change: {json.dumps(wanted)}\n")
     if wanted:
         text += f"\nFailure of those tests today:\n{ca.failure_text(before, wanted)}\n"
+    for path in sorted({t.split("::")[0] for t in wanted}) if worktree else []:
+        source = wrap_untrusted(f"repo://{path}", (worktree / path).read_text(encoding="utf-8"))
+        text += f"\nTarget test file {path} (read it, never edit it):\n{source}\n"
     for comment in feedback:   # a reviewer's comment is human input, still passed as data
         text += f"\nReviewer comment to address: {wrap_untrusted('review-comment', comment)}\n"
     return text

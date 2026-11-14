@@ -12,6 +12,7 @@ from typing import Any
 
 from colex.contracts import LawDocument
 from colex.guardrails.redaction import RedactionCtx, mask, redact
+from colex.map.registers import DORA_CELEX
 
 ACTIONS = ("CONTRACT_REVIEW", "TERMS_UPDATE", "FEE_CHANGE", "POLICY_UPDATE", "CODE_CHANGE", "CONFIG_CHANGE")
 CODE_ACTIONS = ("CODE_CHANGE", "CONFIG_CHANGE")
@@ -55,9 +56,15 @@ def check_item(raw: dict[str, Any], law: LawDocument, flagged: list[str], tools)
         raise Rejected("cite at most 40 lines; narrow the range to the lines that matter")
     body = "\n".join(lines[start - 1:end])
     quote = _flat(str(raw.get("quote", "")))
+    # read() shows each line as "N: text". Those numbers are our annotation, not document text:
+    # a quote that copied them is compared without them.
+    unnumbered = _flat(re.sub(r"(?m)^\s*\d{1,5}: ?", "", str(raw.get("quote", ""))))
     if len(quote) < 4:
         raise Rejected("quote is missing; copy the relevant text exactly from the cited lines")
-    if quote not in _flat(body) and quote not in _flat(redact(body, RedactionCtx())):
+    haystacks = (_flat(body), _flat(redact(body, RedactionCtx())))
+    if not any(quote in h for h in haystacks) and len(unnumbered) >= 4 and any(unnumbered in h for h in haystacks):
+        quote = unnumbered
+    if not any(quote in h for h in haystacks):
         raise Rejected(f"quote is not verbatim in {uri} lines {start}-{end}; read the lines and copy exactly")
     info_type = tools.card(uri)["info_type"]
     if info_type not in ACTION_FOR:
@@ -65,6 +72,15 @@ def check_item(raw: dict[str, Any], law: LawDocument, flagged: list[str], tools)
                        "or code it points to instead")
     if raw["action"] != ACTION_FOR[info_type]:
         raise Rejected(f"for a resource of type '{info_type}' the action must be {ACTION_FOR[info_type]}")
+    if raw["action"] == "CONTRACT_REVIEW":
+        if "contract" not in article.text.lower():
+            raise Rejected(f"{article.id} does not speak about contracts, so it cannot require a contract review; "
+                           "report only what the cited article requires")
+        clauses = tools.facts(uri).get("clauses", {})
+        if law.celex == DORA_CELEX and not clauses.get("missing"):
+            hint = ("; its criticality is not assessed, so ask legal with ask_legal instead"
+                    if clauses.get("missing_if_critical") else "")
+            raise Rejected("the map finds no missing Art. 30 clause that applies to this contract" + hint)
     deadline = raw.get("deadline") or None
     if deadline:
         try:

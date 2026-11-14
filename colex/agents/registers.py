@@ -13,7 +13,7 @@ from colex.contracts import ImpactItem
 from colex.map import registers
 from colex.runtime import store
 
-DORA_CELEX = "32022R2554"
+DORA_CELEX = registers.DORA_CELEX
 ARTICLE = "Art. 30"
 
 
