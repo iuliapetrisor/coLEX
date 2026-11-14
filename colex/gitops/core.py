@@ -47,16 +47,24 @@ class GitCore:
         sub = args[0] if args else ""
         if sub not in ALLOWED or (ALLOWED[sub] is not None and (len(args) < 2 or args[1] not in ALLOWED[sub])):
             raise ForbiddenGitOperation(f"git {' '.join(args[:2])} is not allowed for agents")
-        env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "HOME": str(self.repo.parent),
-               "GIT_CONFIG_NOSYSTEM": "1", "GIT_TERMINAL_PROMPT": "0", "LC_ALL": "C",
-               "GIT_CEILING_DIRECTORIES": str(self.repo.parent)}
-        if agent:
-            env["COLEX_AGENT"] = "1"
-        done = subprocess.run(["git", *args], cwd=cwd or self.repo, env=env, capture_output=True, text=True,
+        where = Path(cwd or self.repo).resolve()
+        if where != self.repo and self.worktrees not in where.parents:
+            raise ForbiddenGitOperation(f"git may only run in the sandbox repository or its worktrees, not {where}")
+        done = subprocess.run(["git", *args], cwd=where, env=self.env(agent), capture_output=True, text=True,
                               timeout=60)
         if done.returncode != 0:
             raise GitError(f"git {sub} failed: {(done.stderr or done.stdout).strip()[:300]}")
         return done.stdout
+
+    def env(self, agent: bool = True) -> dict[str, str]:
+        """Environment for git. Every ancestor of the sandbox repository is a ceiling, so git can never
+        discover a repository that contains the sandbox (such as the coLEX project itself)."""
+        env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "HOME": str(self.repo.parent),
+               "GIT_CONFIG_NOSYSTEM": "1", "GIT_TERMINAL_PROMPT": "0", "LC_ALL": "C",
+               "GIT_CEILING_DIRECTORIES": ":".join(str(p) for p in self.repo.parents)}
+        if agent:
+            env["COLEX_AGENT"] = "1"
+        return env
 
     def seed(self, source: Path) -> str:
         """Create the sandbox repository from the seed folder, if it does not exist. Returns the base sha.

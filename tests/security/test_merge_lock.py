@@ -74,6 +74,17 @@ def test_dirty_worktree_from_a_crash_is_discarded(git):
     assert git.changed(again) == [] and "half written" not in (again / "payments" / "transfer.py").read_text()
 
 
-def test_agent_git_cannot_see_the_outer_repository(git):
-    with pytest.raises(GitError):
-        git._git("rev-parse", "HEAD", cwd=git.repo.parent)
+def test_agent_git_cannot_reach_a_repository_that_contains_the_sandbox(git, tmp_path):
+    """The sandbox lives inside the coLEX project (itself a git repository). Two locks keep agents out of it."""
+    outer = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=tmp_path, capture_output=True, text=True)
+    assert outer.returncode == 0, "this test must run inside an outer git repository to mean anything"
+    for cwd in (git.repo.parent, tmp_path, git.repo.parent.parent):          # lock 1: the class refuses the place
+        with pytest.raises(ForbiddenGitOperation):
+            git._git("status", cwd=cwd)
+    stray = git.worktrees / "run-x" / "not-a-worktree"
+    stray.mkdir(parents=True)
+    with pytest.raises(GitError):                                            # allowed place, but no repository there
+        git._git("rev-parse", "HEAD", cwd=stray)
+    for cwd in (git.repo.parent, stray):                                     # lock 2: git itself cannot discover it
+        seen = subprocess.run(["git", "rev-parse", "--show-toplevel"], cwd=cwd, env=git.env(), capture_output=True)
+        assert seen.returncode != 0
