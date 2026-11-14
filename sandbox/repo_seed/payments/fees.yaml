@@ -1,0 +1,10 @@
+# FICTIONAL – PayRo SRL is a fabricated company for the coLEX demo
+# Customer fees per transfer, in the transfer currency. Published in the Fee Schedule.
+fees:
+  ron:
+    standard: 0.00
+    instant: 0.00
+  eur:
+    standard: 0.50
+    instant: 1.50
+card_topup_percent: 1.0

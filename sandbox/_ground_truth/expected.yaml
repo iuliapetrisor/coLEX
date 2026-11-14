@@ -1,0 +1,25 @@
+# Hidden ground truth for evaluation. Runtime code must never read this file.
+# FICTIONAL – PayRo SRL is a fabricated company for the coLEX demo
+version: 1
+laws:
+  relevant: ["32022R2554", "32025R0301", "32024R0886"]
+  # every other act in sandbox/feed/ is a distractor
+# An impact item matches when uri, action and law agree and the line ranges overlap.
+impact_items:
+  - {law: "32024R0886", uri: "repo://payments/fees.yaml", lines: [7, 9], action: CONFIG_CHANGE, owner_team: product, channel: "#product", deadline: "2027-01-09"}
+  - {law: "32024R0886", uri: "gdrive://product/fee-schedule.md", lines: [11, 13], action: FEE_CHANGE, owner_team: product, channel: "#product", deadline: "2027-01-09"}
+  - {law: "32024R0886", uri: "gdrive://product/terms-and-conditions.md", lines: [13, 20], action: TERMS_UPDATE, owner_team: product, channel: "#product"}
+  - {law: "32024R0886", uri: "repo://payments/transfer.py", lines: [38, 45], action: CODE_CHANGE, owner_team: payments-eng, channel: "#payments-eng", deadline: "2027-07-09"}
+  - {law: "32025R0301", uri: "confluence://ENG/incident-procedure.md", lines: [8, 13], action: POLICY_UPDATE, owner_team: security, channel: "#security"}
+  - {law: "32025R0301", uri: "repo://payments/incidents.py", lines: [9, 29], action: CODE_CHANGE, owner_team: security, channel: "#security"}
+  - {law: "32022R2554", uri: "onedrive://legal/contracts/sms-otp-smsnord.md", lines: [1, 60], action: CONTRACT_REVIEW, owner_team: legal, channel: "#legal"}
+  - {law: "32022R2554", uri: "onedrive://legal/contracts/core-banking-ledgercore.md", lines: [1, 60], action: CONTRACT_REVIEW, owner_team: legal, channel: "#legal"}
+  - {law: "32022R2554", uri: "onedrive://shared/vendor-kyc-agreement.md", lines: [1, 40], action: CONTRACT_REVIEW, owner_team: null, channel: "#compliance"}
+must_not_flag_sources: [intranet]
+must_not_flag: ["onedrive://legal/contracts/cloud-hosting-aws.md", "onedrive://legal/contracts/name-check-pilot-namematch.md"]
+questions:
+  - {law: "32022R2554", about: "onedrive://legal/contracts/card-processing-cardaxis.md", topic: "criticality not assessed"}
+code_changes:
+  - {law: "32024R0886", file: "payments/fees.yaml", must_pass: ["tests/compliance/test_equal_charges.py", "tests/historical"]}
+  - {law: "32024R0886", file: "payments/transfer.py", must_pass: ["tests/compliance/test_verification_of_payee.py", "tests/historical"]}
+  - {law: "32025R0301", file: "payments/incidents.py", must_pass: ["tests/compliance/test_incident_reporting.py", "tests/historical"]}

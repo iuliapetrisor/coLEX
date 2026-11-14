@@ -1,0 +1,4 @@
+# FICTIONAL – PayRo SRL is a fabricated company for the coLEX demo
+# Stands in for the Jira project lead.
+owners:
+  PAY/: {team: payments-eng, role: Engineering Manager, approver: CTO, steward: legal}

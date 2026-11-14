@@ -1,0 +1,5 @@
+# FICTIONAL – PayRo SRL is a fabricated company for the coLEX demo
+# Stands in for the OneDrive owner metadata. Longest matching path prefix wins.
+# shared/ has no owner on purpose: the document there is an ownership trap.
+owners:
+  legal/contracts/: {team: legal, role: Head of Legal, approver: General Counsel, steward: legal}
