@@ -41,6 +41,14 @@ For whoever continues this build (including the orchestrator after a context res
   - Slack: `SlackNotifier(OutboxNotifier)`, Block Kit builders, Socket Mode handlers calling `Runtime.deliver_human_answer`.
   - Console: FastAPI, server-rendered; act-from-Console uses the same `deliver_human_answer`.
 
+## State (after the offline demo, session 2) — READ THIS FIRST
+
+- `make demo` (live, cached) and `make demo OFFLINE=1` (recorded answers) both run brief §1.5 end to end in the terminal with FakeNotifier and a labelled auto-clicker. `make test`: 254 passed, 1 xfailed.
+- Real and merged: feed, sandbox, map, runtime, LLM client, triage, impact loop + grounding validator, coder + GitOps merge lock + sandboxed tests, DORA register, Obligations Register, question → partial pause → re-plan, recorded cassettes (`make record`).
+- NOT built yet: `SlackNotifier` and Socket Mode handlers (only the `Notifier` interface, outbox and `FakeNotifier` exist in `colex/notify/base.py`), the Console (FastAPI), `make eval` + `docs/RESULTS.md`, `SECURITY.md`, product README, final `docs/MORNING_REVIEW.md` sections, `docs/TASKS.md` refresh, gate tags.
+- Known quality problems (all visible on the timeline, none hidden): the context ratio is above 1 on this 21-file sandbox (the map does not save context here); the impact analyst often hits its 40-step limit; results vary between live runs (the coder sometimes fails to converge on `incidents.py`); the fee schedule document is not always reported; triage prompt v2 was tuned on the same 23 acts it is measured on.
+- After any prompt or tool-output change: run `make demo` live, then `make record`, or the offline test fails on a missing cassette.
+
 ## Design notes
 
 - A run is driven by `Engine.drive(run_id)`; it replays completed steps (D-016). Human answers go through `Runtime.deliver_human_answer`.

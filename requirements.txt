@@ -1,3 +1,7 @@
 # Runtime dependencies. Keep this list small (brief §2).
 pydantic>=2.6,<3
 PyYAML>=6
+slack_bolt>=1.18,<2
+fastapi>=0.110
+uvicorn>=0.27
+jinja2>=3.1
