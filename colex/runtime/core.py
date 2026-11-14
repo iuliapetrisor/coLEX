@@ -19,7 +19,7 @@ TRANSITIONS: dict[str, set[str]] = {
     "REMEDIATE": {"REVIEW", "ESCALATED", "VERIFY"},
     "REVIEW": {"REMEDIATE", "VERIFY"},                              # request changes → back to the coder
     "ESCALATED": {"TRIAGE", "IMPACT", "REMEDIATE", "DONE"},
-    "REGISTER": {"VERIFY"},
+    "REGISTER": {"LIAISON", "VERIFY"},
     "VERIFY": {"DONE"},
     "DONE": set(),
 }
