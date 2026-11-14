@@ -28,6 +28,10 @@ make demo OFFLINE=1        # whole brief §1.5 scenario from recorded model answ
 make demo                  # same, calling OpenRouter (answers cached in var/llm_cache; first run 1 to 4 min)
 make map                   # build the Company Map and print its statistics
 make record                # re-record the offline answers after changing a prompt
+make console               # Console at http://127.0.0.1:8000 on the demo state (SLACK=0 to keep Slack off)
+make eval                  # docs/RESULTS.md from the recorded run
+make slack-check           # read-only: auth, Socket Mode, channels; posts nothing
+bash tests/chaos/kill_restart.sh   # kill -9 and restart check, offline
 ```
 
 `make demo` runs in the terminal. Human decisions are given by a labelled auto-clicker (first option of every question, "approve" for every review), not by a person. State is written to `var/demo/`.
@@ -40,7 +44,7 @@ make record                # re-record the offline answers after changing a prom
 - **Humans in the loop.** A criticality question pauses one branch; the answer re-plans one contract; other branches are not re-run. Approval never merges.
 - **Code agent.** Branch per item, sandboxed tests, revise on failure, change request. In live runs: `fees.yaml` passed first try, `transfer.py` passed after one revision, `incidents.py` passed first try in one run and failed all 3 attempts in another (escalated to engineers, no change request).
 - **Registers.** DORA Register of Information (6 rows, CSV) and Obligations Register generated from the map.
-- **Durability.** Checkpoint after every step, replay-based resume, idempotent side effects, fork / export / import, versioned config with rollback, audit hash chain. Covered by unit tests; the `kill -9` subprocess test from the Runtime role file was NOT written.
+- **Durability.** Checkpoint after every step, replay-based resume, idempotent side effects, fork / export / import, versioned config with rollback, audit hash chain. Covered by unit tests. `tests/chaos/kill_restart.sh` (kill -9 while waiting for a human, restart, decide) passed once; it is not part of `make test`.
 
 ## What does not work or is weaker than the brief asks
 
@@ -48,7 +52,9 @@ make record                # re-record the offline answers after changing a prom
 - **Token use is high.** About 350k to 830k model tokens per relevant act, because the full conversation is resent on every step. Cost stayed low only because the model is cheap: a full live demo cost about $0.15.
 - **The impact analyst often stops at its 40-step limit** (visible escalation), and its results vary between live runs. The fee schedule document is not always reported.
 - **Slack is unverified against the real workspace.** See the checklist below.
-- Not built: `make eval` and `docs/RESULTS.md`, `SECURITY.md`, the product README, DOCX/PDF ingestion, `regulated_by` links.
+- **Measured quality is moderate** (`docs/RESULTS.md`, one recorded run): 7 of 9 expected impact items found, 7 of 13 reported items expected. The fee schedule document was missed.
+- **The Console has no login.** It listens on 127.0.0.1 only.
+- Not built: DOCX/PDF ingestion, `regulated_by` links, a live update stream in the Console, the demo script and runbook, 14 of the 15 chaos scenarios, repeated live evaluation runs. No Spec Challenger, Legal-Logic Skeptic or independent Code Breaker review happened.
 
 ## What is stubbed, faked or scripted
 
@@ -62,10 +68,10 @@ make record                # re-record the offline answers after changing a prom
 
 ## Slack: 5-minute manual smoke checklist
 
-Nothing was posted to the real workspace: the Slack code was tested with a fake client only. Do this before any demo.
+Nothing was posted to the real workspace: the Slack code was tested with a fake client only. `make slack-check` did pass against the real workspace (authenticated, Socket Mode connected, all six channels found). Do this before any demo.
 
 1. Set `routing.approvers.legal` and `routing.approvers.engineer` in `config/colex.yaml` (or the Console Settings) to real Slack member ids (profile → "Copy member ID"). They are empty, so until then every Approve or answer click is refused.
-2. Start the server with Slack connected (needs `SLACK_BOT_TOKEN` and `SLACK_APP_TOKEN` in `.env`). See the status line at the end for the exact command.
+2. `make slack-check`, then `make reset && make console`. The first line it prints must say `Slack: connected (Socket Mode)`. Publish acts from the Console Feed page (http://127.0.0.1:8000/feed).
 3. Publish `32024R0886`. Expect notifications in `#product` and `#payments-eng` within a few minutes, with evidence links.
 4. Click **Acknowledge** on a notification: the buttons are replaced by "Decision: Acknowledged · by you".
 5. Publish `32022R2554`. Expect a question in `#legal` with two buttons. Click as a non-approver: you get a private refusal. Click as a legal approver: the message updates and one new notification appears in `#legal`.
@@ -73,10 +79,56 @@ Nothing was posted to the real workspace: the Slack code was tested with a fake 
 7. Run `/colex status` and `/colex why i1`.
 8. Stop the server during a wait, start it again, then click: the run continues and no message is posted twice.
 
-## Commit list
+## Gates
 
-`git log --oneline --first-parent main` shows the merges; `git log --oneline main` shows every commit.
+`g0`, `g1` and `g2` are tagged, self-reviewed, with deviations from the exit criteria listed in D-022 and in each tag message (`git tag -n20`). No adversarial tester signed off any gate. G3 and G4 are not passed and not tagged: G3 needs real Slack interaction by people.
+
+## OpenRouter spend
+
+About $0.77 in total for this session (435 paid calls, from the usage figures stored with the cached answers).
 
 ## Status line
 
-Written after the Slack code was merged and before the Console existed. Until this line is updated: there is no web Console and no command that connects the server to Slack, so checklist steps 2 to 8 cannot be run yet. Read `docs/HANDOFF.md` for the exact state.
+Final for session 2. `make test`: 268 passed, 1 xfailed. `make demo` and `make demo OFFLINE=1` complete. The scenario
+of brief §1.5 runs end to end in the terminal and the Console; steps 4 to 6 of that scenario in real Slack are built
+but unproven. State and next steps: `docs/HANDOFF.md`.
+
+## Commit list (session 2, oldest first; this file's own commit is the next one)
+
+- `2d2a73e` sec(sec): ignore secrets and local state, add .env.example and secret scan
+- `578dca5` sec(sec): add pre-commit hook blocking secrets and forbidden paths
+- `7a09359` sec(sec): mask API keys and Slack tokens in log records
+- `477e105` sec(sec): merge G0-SEC-01 secret handling, pre-commit hook, log scrub
+- `05c4fc8` docs(decision): D-013 full autonomy ruling, D-011 and D-012 accepted
+- `f2002ea` feat(sandbox): add official DORA, IPR and distractor excerpts to the feed
+- `befee27` feat(sandbox): merge G1-SBX-02 official legal feed
+- `15789ed` feat(runtime): durable runtime, config versions, audit chain, redaction
+- `0452bff` feat(llm): OpenRouter client with cache, record/replay, retries, redaction
+- `c4273d7` feat(runtime): merge G0-RT-03 runtime, config store, LLM client
+- `703a384` feat(runtime): walking skeleton of the full run behind make demo
+- `47ce46c` feat(runtime): merge G0-ORC-03 walking skeleton behind make demo
+- `469e58f` feat(sandbox): fabricate the PayRo company data with traps and ground truth
+- `1de6fac` fix(sandbox): expected topic of transfer.py is Transfer authorisation
+- `c62c0c4` feat(sandbox): merge G1-SBX-04 PayRo sandbox data
+- `61bdbe6` feat(map): Company Map with hierarchy, facets, cross-links, rollups, tools
+- `0be11e9` feat(map): merge G1-MAP-03 Company Map
+- `bfbc4d6` feat(reg): real triage and impact analysis with a grounding validator
+- `6956d95` feat(reg): merge G2-REG-03 triage, impact analysis, grounding validator
+- `d98ba5d` feat(coder): remediation coder with merge lock and sandboxed tests
+- `5c40a25` feat(coder): merge G3-COD-01 remediation coder, GitOps, test sandbox
+- `92415c1` feat(map): DORA Register of Information, Obligations Register, Legal Vault
+- `5c31ba9` fix(reg): stop dropping correct findings and accepting wrong contract reviews
+- `6d64f92` feat(map): merge G2-MAP-09 registers and grounding fixes
+- `4d84d08` feat(reg): criticality questions pause one branch and re-plan one contract
+- `1a3684e` feat(reg): merge G3-REG-06 partial pause and re-plan for questions
+- `472853c` test(qa): recorded model answers and an offline end-to-end demo test
+- `b52b1e2` test(qa): merge G4-QA-06 recorded answers and offline end-to-end test
+- `0e8d374` feat(slack): SlackNotifier, Block Kit messages, interaction handlers, /colex
+- `70bbcc0` feat(slack): merge G3-SLK-04 Slack notifier and handlers
+- `605cc36` docs(review): morning review draft with measured results and open problems
+- `9eccebe` feat(ui): Console, server with resume on start-up, kill/restart check
+- `18bc399` feat(ui): merge G3-UI-01 Console, server and kill/restart check
+- `fddb49c` fix(sec): agent git can never reach a repository that contains the sandbox
+- `7724764` feat(eval): make eval scores a demo run and writes docs/RESULTS.md
+- `fc87b56` test(sec): runtime code, prompts and config never mention the hidden data
+- `395e2fb` feat(eval): merge G3-QA-05 make eval, results, GitOps ceiling fix

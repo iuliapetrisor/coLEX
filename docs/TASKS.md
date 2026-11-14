@@ -1,39 +1,47 @@
 # coLEX Task Board
 
-Row format: `| ID | Title | Owner | Gate | Timebox | Status (todo/doing/blocked/review/done) | Acceptance link |`
-Commit hashes for a finished task are listed at the end of its Acceptance cell.
-Rules: `docs/roles/README.md` (§3b commit policy). Decisions: `docs/DECISIONS.md`. Findings: `docs/REVIEWS.md`.
+Row format: `| ID | Title | Owner | Gate | Status | Notes |`. Status: done / partial / todo.
+Rules: `docs/roles/README.md` (§3b). Decisions: `docs/DECISIONS.md`. Findings: `docs/REVIEWS.md`. State and next steps: `docs/HANDOFF.md`.
+All work was done by one session playing every role; every review was a self-review (D-010, D-013).
 
-## G0 Contracts & skeleton
+| ID | Title | Owner | Gate | Status | Notes |
+|---|---|---|---|---|---|
+| G0-ORC-01..03 | Layout, data contracts, skeleton | Orchestrator | G0 | done | Contracts v2 (D-012, D-020) |
+| G0-QA-01 | Test layout, offline harness, FakeNotifier, `make setup/test` | QA | G0 | done | R-002 open (Minor) |
+| G0-QA-02 | Contract tests + schema snapshots | QA | G0 | partial | Contract tests exist; no JSON-schema snapshots |
+| G0-SEC-01 | Secret handling, pre-commit hook, log scrub | Security | G0 | done | |
+| G0-RT-01..05 | Model IDs, SQLite, runtime, config store, LLM client | Runtime | G0 | done | D-015, D-016. ADK spike not done (D-003) |
+| G0-MAP-01/02 | Connectors, tool schemas, taxonomy | Map | G0 | done | |
+| G0-REG-01, G0-COD-01, G0-UI-01, G0-SBX-01 | Agent stubs, GitOps, API skeleton, ground-truth schema | various | G0 | done | Superseded by the real implementations |
+| G0-SLK-01 | Notifier interface + starter against the real workspace | Slack | G0 | partial | Interface done. The starter was not re-run; `make slack-check` verified auth, Socket Mode and channels |
+| G0-REV-01 | Spec Challenger G0 review | Spec Challenger | G0 | todo | No Spec Challenger review was done at any gate |
+| G1-SBX-02/03 | Official excerpts, distractors, `SOURCES.md` | Sandbox | G1 | done | 23 acts. No Legal-Logic Skeptic review |
+| G1-SBX-04/05 | PayRo data with traps, seed repository | Sandbox | G1 | done | Markdown and YAML only (D-018) |
+| G1-MAP-03..07 | Normalizers, hierarchy, facets, links, rollups, tools | Map | G1 | done | No DOCX/PDF; no `regulated_by` links; L3 by keywords (D-019) |
+| G1-SEC-02/03 | Redaction, tool allowlist, read guard | Security | G1 | done | Unit-tested; redaction was not measured on the captured prompts of a full run |
+| G1-RT-06..08 | Idempotent side effects, budgets, retries | Runtime | G1 | partial | Built; no `kill -9` subprocess test of side effects, no budget test |
+| G1-QA-03 | Guard tests | QA | G1 | partial | Network block, secrets scan, static hidden-data check. No file-access patching during a run |
+| G2-REG-02..05 | Watcher, triage, impact loop, grounding | Reg Intel | G2 | done | Quality limits in `docs/RESULTS.md` |
+| G2-MAP-08..10 | Obligations Register, DORA register, context metrics | Map | G2 | done | Register columns are our own. Context ratio is above 1 |
+| G2-SEC-04..06 | Untrusted wrapper, injection detection, audit chain | Security | G2 | partial | One planted injection payload (a Jira comment) instead of the five in the role file |
+| G2-RT-09..11 | Hot reload, fork/export/import, cost accounting | Runtime | G2 | done | |
+| G2-QA-04 | Integration tests per agent with cassettes | QA | G2 | partial | One offline end-to-end test and scripted flow tests; no per-agent cassette tests |
+| G3-REG-06/07 | Questions, partial pause, re-plan, routing | Reg Intel | G3 | done | General (non-criticality) questions still re-plan through the model |
+| G3-COD-02..05 | Test runner, patches, revise loop, review, merge hook | Remediation | G3 | done | Convergence varies between live runs |
+| G3-SLK-02..06 | Block Kit, outbox, handlers, commands, routing | Slack | G3 | partial | Built and tested with a fake client. **Never exercised in the real workspace** |
+| G3-UI-02..05 | Console pages, fork, settings, registers, diff, fallback | Console | G3 | partial | All pages and the fallback actions exist. No login; page refresh instead of a live stream; the JSON API covers runs and events only, not the full list in the role file |
+| G3-QA-05 | Eval harness + `RESULTS.md` | QA | G3 | done | One recorded run |
+| G3-SEC-07/08 | Merge-lock suite, Slack authorization tests | Security | G3 | done | Slack part with a fake client |
+| G4-QA-06 | Offline end-to-end test, resilience tests | QA | G4 | partial | Offline test done. One chaos script (`tests/chaos/kill_restart.sh`), run once |
+| G4-UI-06, G4-SEC-09 | Summary page, export scan, `SECURITY.md` | UI / Security | G4 | partial | Summary and `SECURITY.md` done; no scan of exports and cassettes beyond the token and sample-PII grep |
+| G4-SBX-06, chaos S1–S15, runbook | Demo script, chaos matrix, demo runbook | Sandbox / Saboteur | G4 | todo | Only S3(b) was scripted |
+| G5 | Screenshots, video, pitch, one-pager | humans | G5 | todo | |
 
-Exit criteria: `docs/roles/README.md` §4, row G0. Signs off: Orchestrator + Spec Challenger.
+## Gates
 
-| ID | Title | Owner | Gate | Timebox | Status | Acceptance link |
-|---|---|---|---|---|---|---|
-| G0-ORC-01 | Repo layout under `docs/`, decision log, task board, review log | Orchestrator | G0 | 45m | done | D-008, D-009, D-010; D-011 still open · commits: ee9dd58, fd19ad9 · merge b112651 |
-| G0-ORC-02 | Data contracts: every brief §4.2 model in `colex/contracts/` + `CONTRACTS_VERSION` | Orchestrator | G0 | 1.5h | done | brief §4.2; README §2 rule 2; D-012 · 74 passed, 1 xfailed · R-003 to R-006 fixed · commits: cfe6601, 8a79b5b, 6692fe5, 937f1f6, b09a333, 5e00cf7, 96b418a, 4e5bf46, 13295f6 · merge aa1f8ab |
-| G0-ORC-03 | Repo skeleton (brief §8): package dirs; interface stubs land with each owner's G0 task | Orchestrator | G0 | 30m | todo | brief §8 |
-| G0-QA-01 | Test layout, `conftest.py` (socket block, tmp DB, FakeNotifier), `make setup`, `make test` | QA | G0 | 1.5h | doing | `docs/roles/08-qa-engineer.md` §6 · merged so far: `make setup`, `make test`, socket block, tmp DB path (6 passed, 1 xfailed) · **still missing: FakeNotifier**, which needs the `Notifier` ABC from G0-SLK-01 · R-001 fixed, R-002 deferred · commits: a7f85ca, 20c662e, ce0a5a9, eb2bf96, d7b66ca, 12f721f · merge 2741fe3 |
-| G0-QA-02 | Contract tests for every §4.2 model + schema snapshots | QA | G0 | 1h | todo | `docs/roles/08-qa-engineer.md` §6 |
-| G0-SEC-01 | `.gitignore`, `.env.example`, pre-commit hook, secret-scan test, logging scrub filter, guardrail stubs | Security | G0 | 1h | blocked | `docs/roles/09-security-engineer.md` §5 · **needs: human review of branch `feat/sec/G0-SEC-01` before merge** (D-010 condition 4) and a ruling on D-011 · pushed, not merged: `.gitignore`, `.env.example`, secret-scan test, pre-commit hook, log scrub filter (34 passed, 1 xfailed on the branch) · **still missing: guardrail stubs** (redact, wrap_untrusted, validate_grounding, Budget, allowlist) · the hook is not enabled in any clone yet · commits: 2d2a73e, 578dca5, 7a09359 |
-| G0-RT-01 | Verify OpenRouter model IDs (`/models`, `tools` support) + `python -m colex.llm.smoke` | Runtime | G0 | 30m | todo | `docs/roles/01-runtime-platform-engineer.md` §5 |
-| G0-RT-02 | SQLite schema + numbered migrations, WAL, `busy_timeout` | Runtime | G0 | 45m | todo | `docs/roles/01-runtime-platform-engineer.md` §5 |
-| G0-RT-03 | `Runtime` real `start_run/step/checkpoint` + `resume_all` | Runtime | G0 | 1.5h | todo | `docs/roles/01-runtime-platform-engineer.md` §5 |
-| G0-RT-04 | `ConfigStore` + `config/colex.yaml` schema | Runtime | G0 | 1h | todo | `docs/roles/01-runtime-platform-engineer.md` §5 |
-| G0-RT-05 | `LLMClient` with response cache, record and strict replay modes | Runtime | G0 | 1.5h | todo | `docs/roles/01-runtime-platform-engineer.md` §5 |
-| G0-RT-opt | ADK + LiteLLM spike (optional, only if G0 is green) | Runtime | G0 | 30m | todo | D-003 |
-| G0-MAP-01 | Connector base + 6 sandbox connectors (list only) + map tool stubs + tool JSON schemas | Map | G0 | 2h | todo | `docs/roles/02-ingestion-map-engineer.md` §4 |
-| G0-MAP-02 | `config/taxonomy.yaml` L1–L3 for PayRo | Map | G0 | 45m | todo | `docs/roles/02-ingestion-map-engineer.md` §4 |
-| G0-REG-01 | Agent stubs on `Runtime.step` + prompt file skeletons | Reg Intel | G0 | 1h | todo | `docs/roles/03-regulatory-intelligence-engineer.md` §5 |
-| G0-COD-01 | `GitOps` stub + argument allowlist + ChangeRequest flow against the stub Notifier | Remediation | G0 | 1h | todo | `docs/roles/04-remediation-engineer.md` §4 |
-| G0-SLK-01 | `Notifier` ABC + `FakeNotifier` + starter run against the real workspace | Slack | G0 | 1h | todo | `docs/roles/05-slack-integration-engineer.md` §6 |
-| G0-UI-01 | FastAPI skeleton, stub routes, base layout, SSE plumbing | Console UI | G0 | 1.5h | todo | `docs/roles/06-console-ui-engineer.md` §5 |
-| G0-SBX-01 | `expected.yaml` schema + resource inventory list | Sandbox | G0 | 1h | todo | `docs/roles/07-sandbox-domain-author.md` §6 |
-| G0-REV-01 | Spec Challenger G0 review: check the four seed findings, file what still holds | Spec Challenger | G0 | 45m | todo | `docs/roles/10-spec-challenger.md` §3 |
-
-## G1–G5
-
-Tasks for later gates are defined in the `§Tasks` table of each role file in `docs/roles/`. They are copied onto this board when G0 passes, rescaled to the real hackathon window.
+- **g0, g1, g2**: tagged, self-reviewed only.
+- **G3 not passed**: its first criterion is real Slack (notifications, a legal answer and a PR approval from Slack). That needs people in the workspace.
+- **G4 not passed**: needs G3, three chaos rehearsals and the remaining chaos scenarios.
 
 ## Session log
 
@@ -59,3 +67,11 @@ Open decisions: D-011 (secret grep versus documentation that quotes token prefix
 G0 is not ready: 18 of 20 G0 tasks are not done (2 done, 1 doing, 1 blocked, 16 todo).
 
 - **Correction:** two commit messages on the unmerged branch `feat/sec/G0-SEC-01` overstate their test results. `2d2a73e` and `578dca5` both say "make test: 34 passed, 1 xfailed". That was the result on the working tree, which still held files committed later. Tested alone in a clean worktree: `2d2a73e` gives 11 passed, 1 xfailed; `578dca5` gives 24 passed, 1 xfailed; only the branch head `7a09359` gives 34 passed, 1 xfailed. `578dca5` also says "14 hook tests"; there are 13. The commits were already pushed, so they are not amended (§3b). Since then the orchestrator's commit command tests exactly the staged tree.
+
+### Session 2 (2026-11-14, full autonomy, D-013)
+
+Merged to `main` (each after `make test` was green; all self-reviewed): official feed, runtime + config + LLM client,
+walking skeleton, PayRo sandbox, Company Map, triage + impact + grounding, coder + GitOps + test sandbox, registers,
+question re-plan, recorded answers + offline test, Slack code, Console + server, eval. The full commit list is in
+`docs/MORNING_REVIEW.md`. Findings fixed in this session are described in the commit bodies (they were not filed in
+`docs/REVIEWS.md`, which stops at R-006). Open: R-002.

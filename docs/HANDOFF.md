@@ -49,6 +49,17 @@ For whoever continues this build (including the orchestrator after a context res
 - Known quality problems (all visible on the timeline, none hidden): the context ratio is above 1 on this 21-file sandbox (the map does not save context here); the impact analyst often hits its 40-step limit; results vary between live runs (the coder sometimes fails to converge on `incidents.py`); the fee schedule document is not always reported; triage prompt v2 was tuned on the same 23 acts it is measured on.
 - After any prompt or tool-output change: run `make demo` live, then `make record`, or the offline test fails on a missing cassette.
 
+## State at the end of session 2 — THIS SECTION IS CURRENT, the ones above are history
+
+- Built since the section above: Slack code (`colex/notify/`), Console + server (`colex/api/`, `colex/server.py`,
+  `make console`), `make eval` + `docs/RESULTS.md`, `SECURITY.md`, product `README.md`, `tests/chaos/kill_restart.sh`.
+- `make test`: 268 passed, 1 xfailed. Tags g0, g1, g2. Task board: `docs/TASKS.md`. For the humans: `docs/MORNING_REVIEW.md`.
+- Next, in order of value: (1) humans run the Slack checklist in `docs/MORNING_REVIEW.md`; fix what it finds.
+  (2) Impact quality: the analyst resends the whole conversation each step (350k to 830k tokens per act) and often
+  hits its 40-step limit; trimming old tool results from the message list is the obvious fix. (3) A larger sandbox,
+  to test whether the map saves context at all. (4) The other chaos scenarios, demo script, runbook.
+- After changing a prompt or any text the model sees: `make demo`, then `make record`, or the offline test fails.
+
 ## Design notes
 
 - A run is driven by `Engine.drive(run_id)`; it replays completed steps (D-016). Human answers go through `Runtime.deliver_human_answer`.
