@@ -15,6 +15,66 @@ Merged without a human review, on the full-autonomy ruling. All self-reviewed on
 | `feat/slack/G3-SLK-04` | "merge G3-SLK-04 Slack notifier and handlers" | `colex/notify/handlers.py` (`_allowed`: who may decide; dedupe of clicks), `colex/notify/app.py` (tokens read from the environment). Tested with a fake client only. The manifest scopes were not changed. |
 | `feat/coder/G3-COD-01` | "merge G3-COD-01 remediation coder, GitOps, test sandbox" | `colex/gitops/core.py` (git subcommand allowlist; the `reference-transaction` hook text), `colex/testrunner/__init__.py` (environment passed to sandboxed tests, limits, network block), `colex/agents/coder_apply.py` (which files the coder may edit). Check: `tests/security/test_merge_lock.py`, `tests/security/test_runner_sandbox.py`. |
 
-## Status
+Every merge above was reviewed only by the session that wrote it. None had an independent review.
 
-Work in progress. Sections "what works", "how to run the demo", "what is stubbed or faked", "Slack smoke checklist" and "commit list" are filled in as the build advances.
+## How to run the demo
+
+```
+make setup                 # once: project .venv, dependencies, enables the pre-commit hook
+make test                  # offline, about 15 s
+make demo OFFLINE=1        # whole brief §1.5 scenario from recorded model answers, about 5 s, no network
+make demo                  # same, calling OpenRouter (answers cached in var/llm_cache; first run 1 to 4 min)
+make map                   # build the Company Map and print its statistics
+make record                # re-record the offline answers after changing a prompt
+```
+
+`make demo` runs in the terminal. Human decisions are given by a labelled auto-clicker (first option of every question, "approve" for every review), not by a person. State is written to `var/demo/`.
+
+## What works (measured, not assumed)
+
+- **Feed and triage.** 23 official EU acts (verbatim, hashed, sources in `docs/SOURCES.md`). In the recorded run and the live runs so far, the 3 relevant acts scored 1.00 and the 20 distractors 0.00. Caveat: triage prompt v2 was written after seeing v1 results on these same 23 acts, so this is not an independent measurement.
+- **Company Map.** 21 PayRo resources from 6 simulated sources; all 21 match the ground truth on path, owner, ownership source and type; 6 of 6 contracts on counterparty, criticality and missing clauses. Caveat: taxonomy keywords and four per-file rules were tuned on this data.
+- **Impact analysis.** A tool loop over the map with a rationale per call, locate-before-read, and a grounding validator. Rejections and dropped items are shown on the timeline.
+- **Humans in the loop.** A criticality question pauses one branch; the answer re-plans one contract; other branches are not re-run. Approval never merges.
+- **Code agent.** Branch per item, sandboxed tests, revise on failure, change request. In live runs: `fees.yaml` passed first try, `transfer.py` passed after one revision, `incidents.py` passed first try in one run and failed all 3 attempts in another (escalated to engineers, no change request).
+- **Registers.** DORA Register of Information (6 rows, CSV) and Obligations Register generated from the map.
+- **Durability.** Checkpoint after every step, replay-based resume, idempotent side effects, fork / export / import, versioned config with rollback, audit hash chain. Covered by unit tests; the `kill -9` subprocess test from the Runtime role file was NOT written.
+
+## What does not work or is weaker than the brief asks
+
+- **The map does not save context on this sandbox.** Measured ratio of context used through the map to the whole corpus: 1.17 to 1.51. The corpus is only about 5,400 tokens, and tool-call overhead is larger than that. The "context savings" pitch claim is not supported by these numbers; a larger corpus is needed to test it.
+- **Token use is high.** About 350k to 830k model tokens per relevant act, because the full conversation is resent on every step. Cost stayed low only because the model is cheap: a full live demo cost about $0.15.
+- **The impact analyst often stops at its 40-step limit** (visible escalation), and its results vary between live runs. The fee schedule document is not always reported.
+- **Slack is unverified against the real workspace.** See the checklist below.
+- Not built: `make eval` and `docs/RESULTS.md`, `SECURITY.md`, the product README, DOCX/PDF ingestion, `regulated_by` links.
+
+## What is stubbed, faked or scripted
+
+- `make demo` and all tests use `FakeNotifier`: messages are recorded in the outbox table, not sent anywhere.
+- The demo auto-clicker answers every human question. Its "yes" to a criticality question is a script, not a legal judgement.
+- Flow tests use a scripted stand-in for the model (`tests/e2e/fakes.py`). They prove the runtime and the guards, not model quality.
+- `make demo OFFLINE=1` replays one recorded live run.
+- PayRo SRL and all sandbox company data are fabricated. Provider names other than Amazon Web Services are invented.
+- The DORA register columns are our own, not the official template. Art. 30 clause detection is a keyword heuristic.
+- The pitch numbers in brief §1.1 (Compliance.ai study, Romanian VAT law dates) were not verified. Do not use them until someone finds the primary sources.
+
+## Slack: 5-minute manual smoke checklist
+
+Nothing was posted to the real workspace: the Slack code was tested with a fake client only. Do this before any demo.
+
+1. Set `routing.approvers.legal` and `routing.approvers.engineer` in `config/colex.yaml` (or the Console Settings) to real Slack member ids (profile → "Copy member ID"). They are empty, so until then every Approve or answer click is refused.
+2. Start the server with Slack connected (needs `SLACK_BOT_TOKEN` and `SLACK_APP_TOKEN` in `.env`). See the status line at the end for the exact command.
+3. Publish `32024R0886`. Expect notifications in `#product` and `#payments-eng` within a few minutes, with evidence links.
+4. Click **Acknowledge** on a notification: the buttons are replaced by "Decision: Acknowledged · by you".
+5. Publish `32022R2554`. Expect a question in `#legal` with two buttons. Click as a non-approver: you get a private refusal. Click as a legal approver: the message updates and one new notification appears in `#legal`.
+6. In `#payments-eng`, on a review message click **Request changes** and type a comment in the modal: a second review message appears. Click **Approve** on it twice: one decision is recorded.
+7. Run `/colex status` and `/colex why i1`.
+8. Stop the server during a wait, start it again, then click: the run continues and no message is posted twice.
+
+## Commit list
+
+`git log --oneline --first-parent main` shows the merges; `git log --oneline main` shows every commit.
+
+## Status line
+
+Written after the Slack code was merged and before the Console existed. Until this line is updated: there is no web Console and no command that connects the server to Slack, so checklist steps 2 to 8 cannot be run yet. Read `docs/HANDOFF.md` for the exact state.
