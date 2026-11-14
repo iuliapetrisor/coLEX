@@ -45,6 +45,19 @@ def test_every_page_renders_and_is_not_a_chat(console):
     assert client.get("/evidence?uri=..%2F..%2F.env&start=1&end=5").text.count("not a resource") == 1
 
 
+def test_map_picture_draws_the_hierarchy_and_the_path_of_a_run(console):
+    client, _, _, run_id = console
+    plain = client.get("/map/picture")
+    assert plain.status_code == 200 and "FICTIONAL PayRo data" in plain.text
+    assert "<svg" in plain.text and "<b>21</b> resources from <b>6</b> source systems" in plain.text
+    assert "Transfer fees" in plain.text and "class='arc'" in plain.text and " seen" not in plain.text
+    assert f"/map/picture?run={run_id}" in plain.text
+    walked = client.get(f"/map/picture?run={run_id}").text
+    assert f"Path of run {run_id}" in walked and " seen" in walked and " dim" in walked and "found</text>" in walked
+    assert "of 139 sections" in walked and "Model tokens billed" in walked
+    assert client.get("/map/picture?run=run-nope").status_code == 404
+
+
 def test_console_approval_resumes_the_run_like_slack_and_never_merges(console):
     client, _, deps, run_id = console
     wait = store.waits(run_id, "pending")[0]

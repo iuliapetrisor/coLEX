@@ -34,11 +34,15 @@ def explorer(path: str | None) -> str:
             cards.append([evidence(i["uri"], 1, min(i["lines"], 40), i["uri"]), e(i["info_type"]),
                           e(i["owner_team"] or "unknown") + inferred, e(", ".join(i["counterparties"])),
                           e(i.get("membership", "primary")), e(", ".join(i.get("missing_clauses", [])))])
-        detail = (f"<h2>{e(listed['breadcrumbs'])}</h2>"
+        more = (f"<p class='muted'>Showing the first {len(cards)} of {listed['total']:,} resources.</p>"
+                if listed.get("next_cursor") else "")
+        detail = (f"<h2>{e(listed['breadcrumbs'])}</h2>{more}"
                   + table(["Resource", "Type", "Owner", "Contractors", "Membership", "Missing clauses"], cards))
     options = "".join(f"<option>{e(r['path'])}</option>" for r in rows if r["level"] == "L3")
-    queue = []
-    for q in t.unclassified()["items"]:
+    queue, review = [], t.unclassified()
+    waiting = (f"<p class='muted'>Showing the first {len(review['items'])} of {review['total']:,} entries.</p>"
+               if review.get("next_cursor") else "")
+    for q in review["items"]:
         action = ""
         if q["kind"] == "unclassified":
             action = (f"<form method='post' action='/map/assign'><input type='hidden' name='uri' "
@@ -49,8 +53,9 @@ def explorer(path: str | None) -> str:
                                             (t.mv,)).fetchone()["stats_json"])
     head = (f"<p>Version <code>{e(t.mv)}</code> · {stats['resources']} resources · {stats['edges']} links · owners: "
             f"{stats['owners']['explicit']} explicit, {stats['owners']['inferred']} inferred, "
-            f"{stats['owners']['unknown']} unknown {post('/map/rebuild', 'Rebuild')}</p>")
-    return page("Company Map", head + detail + "<h2>Review queue</h2>"
+            f"{stats['owners']['unknown']} unknown {post('/map/rebuild', 'Rebuild')} · "
+            "<a href='/map/picture'>see it as a picture</a></p>")
+    return page("Company Map", head + detail + "<h2>Review queue</h2>" + waiting
                 + table(["Kind", "Resource", "Detail", "Action"], queue) + "<h2>Hierarchy</h2>" + tree)
 
 

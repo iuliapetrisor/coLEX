@@ -18,6 +18,9 @@ make demo             # same with OpenRouter (needs OPENROUTER_API_KEY in .env; 
 make console          # Console on http://127.0.0.1:8000 over the demo state (no login: local use only)
 make payro            # fictional PayRo app, two phones: sender on http://127.0.0.1:8001, receiver on :8002
 make eval             # score the recorded run against the ground truth → docs/RESULTS.md
+make scale            # Company Map at 21 to 5,021 resources, offline, no model → docs/SCALE.md
+make scale-live       # CALLS OPENROUTER: one act analysed at 21, 1,021 and 5,021 resources (one run each)
+make scale-console    # second Console on http://127.0.0.1:8003 over the 5,021-resource company of scale-live
 make slack-check      # read-only check of the Slack workspace connection
 ```
 

@@ -60,6 +60,22 @@ slack-check: setup
 eval: setup
 	COLEX_OFFLINE=$(if $(LIVE),,1) $(BIN)/python tests/eval/run_eval.py
 
+# Scale test of the Company Map (tests/scale): the sandbox plus up to 5,000 generated, labelled documents.
+# scale          offline, no model: builds the map at four sizes and writes docs/SCALE.md.
+# scale-live     CALLS OPENROUTER (about 0.10 USD per size when recorded): one act analysed at three sizes.
+# scale-console  a second Console over the 5,021-resource company left by scale-live (var/scale/live-5000).
+#                Slack off, no model calls: for looking at the map, not for answering questions.
+SCALE_PORT ?= 8003
+.PHONY: scale scale-live scale-console
+scale: setup
+	COLEX_OFFLINE=1 $(BIN)/python -m tests.scale.report
+
+scale-live: setup
+	COLEX_OFFLINE= $(BIN)/python -m tests.scale.live 32024R0886 0 1000 5000
+
+scale-console: setup
+	COLEX_VAR=var/scale/live-5000 COLEX_PORT=$(SCALE_PORT) COLEX_SLACK=0 COLEX_OFFLINE=1 $(BIN)/python -m colex.server
+
 # The fictional PayRo app, two phones: the sender on PAYRO_PORT, the receiver on PAYRO_RECEIVER_PORT.
 # The sender's phone runs the payments code checked out in the sandbox repository of the demo state
 # (var/demo/repo), so its fees and rules change after a human merges a coLEX branch: reload the page.

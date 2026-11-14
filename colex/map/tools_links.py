@@ -58,8 +58,8 @@ class Links:
         rows = [{k: r[k] for k in OBLIGATION_FIELDS} for r in db.connect().execute(sql + " order by id", args)]
         return self._out(norm_path(str(path)) if path else "PayRo", self._page(rows, 0))
 
-    def unclassified(self) -> dict[str, Any]:
-        """Review queues for humans (Console only; the runtime agent cannot call this)."""
-        rows = [dict(r) for r in db.connect().execute("select kind, uri, detail from review_queue where mv=?",
-                                                      (self.mv,))]
-        return self._out("PayRo › Unclassified", {"items": rows, "total": len(rows)})
+    def unclassified(self, cursor: int = 0) -> dict[str, Any]:
+        """Review queues for humans, one bounded page (Console only; the runtime agent cannot call this)."""
+        rows = [dict(r) for r in db.connect().execute(
+            "select kind, uri, detail from review_queue where mv=? order by kind, uri", (self.mv,))]
+        return self._out("PayRo › Unclassified", self._page(rows, cursor))

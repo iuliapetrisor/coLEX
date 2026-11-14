@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, Response
 
 from colex import db
-from colex.api import actions, pages_admin, pages_map, pages_registers, pages_run, pages_runs
+from colex.api import actions, pages_admin, pages_map, pages_picture, pages_registers, pages_run, pages_runs
 from colex.api.html import page
 from colex.map import registers
 from colex.map import store as map_store
@@ -59,6 +59,10 @@ def create_app(engine, deps) -> FastAPI:
     @app.get("/map")
     def explorer(path: str | None = None):
         return html(pages_map.explorer, path)
+
+    @app.get("/map/picture")
+    def map_picture(run: str | None = None):
+        return html(pages_picture.picture, run)
 
     @app.get("/evidence")
     def evidence(uri: str, start: int = 1, end: int = 1):

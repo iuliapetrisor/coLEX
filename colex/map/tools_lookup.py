@@ -3,12 +3,15 @@ from __future__ import annotations
 
 import json
 import re
+from collections import Counter
 from typing import Any
 
 from colex import db
 from colex.map.hierarchy import norm_path
 from colex.map.registry import norm_name
 from colex.map.tools_links import Links
+
+LISTED = 12   # mentions shown when a contractor is mentioned in more resources than one answer can hold
 
 
 class Lookup(Links):
@@ -62,8 +65,16 @@ class Lookup(Links):
                      "lines": lines[:8], "breadcrumbs": res[u]["primary_path"]} for u, lines in places.items()]
         contract = next((res[u] for u in places if res[u]["info_type"] == "contract"
                          and res[u].get("counterparty") == match["counterparty_id"]), None)
-        return self._out(contract["primary_path"] if contract else "PayRo",
-                         {"counterparty": match, "contract": contract, "mentions": mentions})
+        payload = {"counterparty": match, "contract": contract, "mentions": mentions}
+        if len(json.dumps(payload, ensure_ascii=False)) > self.max_chars * 0.8:   # too many mentions to list
+            first = sorted(mentions, key=lambda m: (m["info_type"] in ("ticket", "page"), m["uri"]))[:LISTED]
+            payload = {"counterparty": match, "contract": contract, "mentions": first,
+                       "mentions_total": len(mentions),
+                       "mentions_by_type": dict(Counter(m["info_type"] for m in mentions)),
+                       "note": f"only {LISTED} mentions are listed (contracts, code and configuration first); for "
+                               f"the rest call find with etype 'ict_provider', value '{match['counterparty_id']}' "
+                               "and 'under' a map path"}
+        return self._out(contract["primary_path"] if contract else "PayRo", payload)
 
     def owners(self, team: str) -> dict[str, Any]:
         """Resources a team owns, grouped by map path. team='unknown' lists resources with no owner."""
@@ -73,4 +84,10 @@ class Lookup(Links):
             if r["owner_team"] == want:
                 groups.setdefault(r["primary_path"], []).append(
                     {"uri": r["uri"], "info_type": r["info_type"], "ownership_source": r["ownership_source"]})
-        return self._out("PayRo", {"team": team, "total": sum(len(v) for v in groups.values()), "by_path": groups})
+        payload = {"team": team, "total": sum(len(v) for v in groups.values()), "by_path": groups}
+        if len(json.dumps(payload, ensure_ascii=False)) > self.max_chars * 0.8:   # too many to list: counts instead
+            payload = {"team": team, "total": payload["total"],
+                       "count_by_path": {path: len(found) for path, found in groups.items()},
+                       "note": "too many resources to list: call list_resources on one of these paths with the "
+                               "facet owner_team"}
+        return self._out("PayRo", payload)
