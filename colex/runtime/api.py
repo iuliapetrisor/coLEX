@@ -30,13 +30,15 @@ class Runtime(Core, Steps, Transfer):
         return json.loads(db.dumps(result))
 
     def wait_for_human(self, run_id: str, branch_id: str, kind: str, payload: dict[str, Any], *,
-                       key: str) -> dict[str, Any] | None:
+                       key: str, node: str | None = None) -> dict[str, Any] | None:
         """Durable human wait. Returns the answer if it has arrived, else None (the branch stays paused)."""
         wait_id = f"{run_id}:{key}"
         existing = store.wait(wait_id)
         if existing and existing["status"] == "answered":
             return {**existing["answer"], "actor": existing["actor"], "wait_id": wait_id}
         if existing is None:
+            if node:
+                self._transition(store.run_row(run_id), branch_id, node)
             con = db.connect()
             con.execute("begin immediate")
             con.execute("insert into waits(wait_id,run_id,branch_id,kind,payload_json,status,created_ts,seq_created)"
@@ -45,7 +47,7 @@ class Runtime(Core, Steps, Transfer):
             con.execute("commit")
             audit.emit(run_id, "runtime", "-", "wait", f"Waiting for a human ({kind}) on branch {branch_id}",
                        {"wait_id": wait_id, "branch": branch_id})
-        self.set_branch(run_id, branch_id, WAIT_STATUS[kind])
+        self.set_branch(run_id, branch_id, WAIT_STATUS[kind], node)
         return None
 
     def deliver_human_answer(self, wait_id: str, answer: dict[str, Any], actor_user_id: str) -> bool:

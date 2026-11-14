@@ -13,10 +13,25 @@ For whoever continues this build (including the orchestrator after a context res
 - Helper (untracked): `var/tools/g.sh start|commit|merge`. Commit messages are written to `var/msg/*.txt` and deleted after use.
 - Never read or print `.env`. Scratch files only under `var/`.
 
-## Next steps
+## State (after the walking skeleton)
 
-1. Walking skeleton: feed → triage → impact → FakeNotifier → coder → summary on stubs, behind `make demo`.
-2. Replace stubs with real code in the order of brief §1.5.
+- `make demo` runs feed → triage → impact → notify → coder → review → verify on the real runtime. It finds DORA (32022R2554), its incident-reporting act (32025R0301) and IPR (32024R0886) relevant and archives 20 acts.
+- Real: `colex/runtime/` (steps, checkpoints, waits, side effects, fork/export/import), `colex/config.py`, `colex/llm/` (OpenRouter verified with `openai/gpt-4.1-mini`), watcher, run driver (`colex/agents/flow*.py`, `engine.py`), liaison routing, outbox + FakeNotifier, verifier, redaction, audit chain, official feed in `sandbox/feed/`.
+- Stubs, labelled in the timeline: `agents/triage.py` (keywords only), `agents/impact.py` (one fixed item), `agents/coder.py` (no patch), `agents/registers.py` (nothing).
+- Not started: PayRo sandbox data, Company Map, Slack implementation, Console, eval.
+
+## Next steps (order of brief §1.5)
+
+1. PayRo sandbox (`sandbox/onedrive|gdrive|confluence|jira|intranet|repo_seed`) with traps and `_ground_truth/expected.yaml`.
+2. Company Map: connectors, build, tools (reuse `docs/company_map_starter.py` ideas), then real impact analysis as a tool loop.
+3. Triage with the cheap model. 4. Slack notifier (Block Kit, Socket Mode handlers). 5. Coder with GitOps and sandboxed tests.
+6. DORA register. 7. Console (FastAPI). 8. Cassettes for `OFFLINE=1`, eval, `docs/MORNING_REVIEW.md`.
+
+## Design notes
+
+- A run is driven by `Engine.drive(run_id)`; it replays completed steps (D-016). Human answers go through `Runtime.deliver_human_answer`.
+- Step functions get a `StepContext` (`ctx.config`, `ctx.emit(kind, summary)`) and return JSON-serialisable dicts.
+- Editor tool limit: about 6000 characters per file write. Split modules.
 
 ## Gotchas
 

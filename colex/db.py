@@ -43,6 +43,11 @@ MIGRATIONS: list[str] = [
     create table interactions (key text primary key, actor text, ts text not null);
     create table kv (key text primary key, value text not null);
     """,
+    """
+    create table laws (celex text primary key, sha text not null, body_sha text, title text not null,
+        path text not null, status text not null, reason text, run_id text, triage_json text,
+        doc_json text not null, ts text not null);
+    """,
 ]
 
 

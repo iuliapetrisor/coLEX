@@ -35,5 +35,12 @@ def load_env(path: Path | None = None) -> None:
         os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
 
+def inbox() -> Path:
+    """The live feed the watcher polls. Publishing an act copies it here from the library (FEED)."""
+    path = var_dir() / "feed"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
 def offline() -> bool:
     return os.environ.get("COLEX_OFFLINE", "") not in ("", "0", "false")
