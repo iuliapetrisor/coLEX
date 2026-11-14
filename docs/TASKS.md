@@ -56,4 +56,6 @@ Pushed, waiting for human review (not merged):
 
 Self-review findings: R-001, R-003, R-004, R-005, R-006 fixed and confirmed. Open: R-002 (Minor, deferred to G1-COD-02).
 Open decisions: D-011 (secret grep versus documentation that quotes token prefixes).
-G0 is not ready: 16 of 20 G0 tasks are not done.
+G0 is not ready: 18 of 20 G0 tasks are not done (2 done, 1 doing, 1 blocked, 16 todo).
+
+- **Correction:** two commit messages on the unmerged branch `feat/sec/G0-SEC-01` overstate their test results. `2d2a73e` and `578dca5` both say "make test: 34 passed, 1 xfailed". That was the result on the working tree, which still held files committed later. Tested alone in a clean worktree: `2d2a73e` gives 11 passed, 1 xfailed; `578dca5` gives 24 passed, 1 xfailed; only the branch head `7a09359` gives 34 passed, 1 xfailed. `578dca5` also says "14 hook tests"; there are 13. The commits were already pushed, so they are not amended (§3b). Since then the orchestrator's commit command tests exactly the staged tree.
