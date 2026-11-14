@@ -8,6 +8,7 @@ from colex.agents.flow_common import CODE_ACTIONS, ask, notify
 from colex.agents.flow_remediate import remediate
 from colex.contracts import Question
 from colex.runtime import store
+from colex.runtime.core import StepFailed
 
 
 def advance_branches(deps, run_id: str, law, items: dict[str, dict[str, Any]],
@@ -47,7 +48,10 @@ def advance_branches(deps, run_id: str, law, items: dict[str, dict[str, Any]],
         if item_id in waiting:
             rt.set_branch(run_id, item_id, "waiting_for_legal")
         elif item["action"] in CODE_ACTIONS and not item.get("register_only"):
-            remediate(deps, run_id, law, item)
+            try:
+                remediate(deps, run_id, law, item)
+            except StepFailed:
+                continue   # this branch is marked failed and shown on the timeline; the others go on
         else:
             rt.set_branch(run_id, item_id, "done")
     states = [b["status"] for k, b in store.run_row(run_id)["branches"].items() if k != "main"]
