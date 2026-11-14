@@ -21,7 +21,7 @@ BRIEF_MODELS = [
 
 
 def test_every_brief_model_is_exported_and_has_a_payload():
-    assert c.CONTRACTS_VERSION == "1"
+    assert c.CONTRACTS_VERSION == "2"
     assert [n for n in BRIEF_MODELS if n not in c.__all__ or not hasattr(c, n)] == []
     assert sorted(VALID) == sorted(BRIEF_MODELS)
 

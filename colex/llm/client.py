@@ -93,21 +93,22 @@ class LLMClient:
         return out
 
     def _lookup(self, key: str) -> dict[str, Any] | None:
-        path = settings.CASSETTES / f"{key}.json"
-        if path.is_file():
-            return json.loads(path.read_text(encoding="utf-8"))["response"]
-        if self.mode == "replay":
-            return None
-        row = db.connect().execute("select response_json from llm_cache where key=?", (key,)).fetchone()
-        return json.loads(row["response_json"]) if row else None
+        """Recorded cassette first, then the local cache (never in replay mode)."""
+        places = [settings.CASSETTES] if self.mode == "replay" else [settings.CASSETTES, settings.llm_cache_dir()]
+        for folder in places:
+            path = folder / f"{key}.json"
+            if path.is_file():
+                return json.loads(path.read_text(encoding="utf-8"))["response"]
+        return None
 
     def _store(self, key: str, agent: str, body: dict[str, Any], response: dict[str, Any]) -> None:
-        db.connect().execute("insert or replace into llm_cache values(?,?,?)", (key, db.dumps(response), audit.now()))
-        if self.mode == "record":
-            settings.CASSETTES.mkdir(parents=True, exist_ok=True)
-            (settings.CASSETTES / f"{key}.json").write_text(json.dumps(
-                {"agent": agent, "model": body["model"], "response": response}, ensure_ascii=False, indent=1),
-                encoding="utf-8")
+        keep = {"choices": [{"message": c.get("message"), "finish_reason": c.get("finish_reason")}
+                            for c in response.get("choices", [])], "usage": response.get("usage")}
+        text = json.dumps({"agent": agent, "model": body["model"], "response": keep}, ensure_ascii=False, indent=1)
+        folders = [settings.llm_cache_dir()] + ([settings.CASSETTES] if self.mode == "record" else [])
+        for folder in folders:
+            folder.mkdir(parents=True, exist_ok=True)
+            (folder / f"{key}.json").write_text(text, encoding="utf-8")
 
     def _call(self, body: dict[str, Any], cfg: dict[str, Any], agent: str, run_id: str | None) -> dict[str, Any]:
         attempts = cfg["budgets"]["llm_max_attempts"]

@@ -64,6 +64,17 @@ class Base:
                                    (self.mv, norm_path(str(path)))).fetchone()
         return dict(row) if row else None
 
+    def _unknown(self, path: str) -> dict[str, Any]:
+        """Error for an unknown path, with the valid children of its nearest known ancestor."""
+        parts = norm_path(str(path)).split(SEP)
+        while parts and self._node(SEP.join(parts)) is None:
+            parts.pop()
+        parent = SEP.join(parts) or "PayRo"
+        rows = db.connect().execute("select path from nodes where mv=? and parent_id=(select node_id from nodes "
+                                    "where mv=? and path=?) order by path", (self.mv, self.mv, parent)).fetchall()
+        return {"error": f"unknown path '{path}'. Copy a path exactly from a result.",
+                "valid_paths_under_" + parent.split(SEP)[-1]: [r["path"] for r in rows]}
+
     def _crumbs(self, uri: str) -> str:
         row = db.connect().execute("select primary_path from resources where mv=? and uri=?",
                                    (self.mv, uri)).fetchone()
@@ -81,6 +92,17 @@ class Base:
             "where r.mv=? and (n.node_path=? or n.node_path like ?) order by n.kind, r.uri",
             (self.mv, path, path + SEP + "%")).fetchall()
         return [self._res(r, r["membership"]) for r in rows]
+
+    def card(self, uri: str) -> dict[str, Any] | None:
+        """The stored ResourceCard of a resource (not metered: used by validators and routing)."""
+        row = db.connect().execute("select card_json from resources where mv=? and uri=?",
+                                   (self.mv, str(uri))).fetchone()
+        return json.loads(row["card_json"]) if row else None
+
+    def lines(self, uri: str) -> list[str] | None:
+        """All lines of a map resource, or None (not metered: used by validators, never by the agent)."""
+        row = db.connect().execute("select body from resources where mv=? and uri=?", (self.mv, str(uri))).fetchone()
+        return row["body"].splitlines() if row else None
 
     def _uris_under(self, under: str | None) -> set[str] | None:
         return {r["uri"] for r in self._rows(under)} if under else None

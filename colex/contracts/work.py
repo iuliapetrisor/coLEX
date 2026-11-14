@@ -32,6 +32,7 @@ class ImpactItem(Contract):
     citation: NonBlank
     confidence: Confidence
     deadline: date | None = None
+    obligation: str = ""   # what must change, in one sentence (added in contracts v2, D-020)
 
 
 class Question(Contract):

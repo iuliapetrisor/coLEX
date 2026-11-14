@@ -38,6 +38,7 @@ MSG = [{"role": "user", "content": "hello"}]
 @pytest.fixture(autouse=True)
 def _env(colex_db_path, tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "CASSETTES", tmp_path / "cassettes")
+    monkeypatch.setenv("COLEX_LLM_CACHE", str(tmp_path / "cache"))
     monkeypatch.delenv("MODEL_CHEAP", raising=False)
     monkeypatch.delenv("MODEL_STRONG", raising=False)
 

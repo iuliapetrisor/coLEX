@@ -9,6 +9,7 @@ from colex import demo, settings
 from colex.agents import watcher
 from colex.notify.base import outbox_rows
 from colex.runtime import audit, store
+from tests.e2e.fakes import ScriptedLLM
 
 ACTS = ("32024R0886", "32023R1114", "32025R0150")
 
@@ -18,6 +19,7 @@ def world(tmp_path, monkeypatch):
     monkeypatch.setenv("COLEX_OFFLINE", "1")
     monkeypatch.setattr(settings, "load_env", lambda path=None: None)
     engine, deps = demo.build(tmp_path / "var")
+    deps.llm = ScriptedLLM()
     for celex in ACTS:
         shutil.copy(settings.FEED / f"{celex}.md", settings.inbox() / f"{celex}.md")
     return engine, deps

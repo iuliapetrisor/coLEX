@@ -12,6 +12,11 @@ CODE_ACTIONS = ("CODE_CHANGE", "CONFIG_CHANGE")
 CR_FIELDS = ("branch", "diff", "tests_before", "tests_after", "iterations", "status")
 
 
+def to_item(item: dict[str, Any]) -> ImpactItem:
+    """Contract model from a stored item, dropping the map fields the run keeps alongside it."""
+    return ImpactItem(**{k: v for k, v in item.items() if k in ImpactItem.model_fields})
+
+
 def decided(deps, key: str, ref: dict[str, Any], answer: dict[str, Any]) -> None:
     """Update the original message in place with the decision, who decided and when."""
     text = answer.get("decision") or answer.get("text", "")
@@ -34,7 +39,7 @@ def ask(deps, run_id: str, branch: str, node: str, key: str, q: Question, channe
 
 def notify(deps, ctx, law, items: list[dict[str, Any]], tag: str, label: str = "") -> dict[str, Any]:
     """Liaison step body: one batch per channel, routed with the config this step started with."""
-    batches = liaison.plan(ctx.config, law, [ImpactItem(**i) for i in items], label)
+    batches = liaison.plan(ctx.config, law, [to_item(i) for i in items], label)
     for batch in batches:
         key = f"notify:{ctx.run_id}:{tag}:{batch.channel}"
         deps.rt.side_effect(key, lambda b=batch, k=key: deps.notifier.notify(

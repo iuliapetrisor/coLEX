@@ -12,7 +12,7 @@ agent_models:
   liaison: cheap
   mention: cheap
 budgets:
-  max_tokens_per_run: 600000
+  max_tokens_per_run: 1500000
   max_cost_usd_per_law: 1.0
   max_impact_steps: 40
   max_coder_iterations: 3
@@ -64,7 +64,7 @@ profile:
   uses_ict_third_party_providers: true
   not_provided: [crypto-asset services, insurance, lending, investment services, agriculture, fisheries, trade in goods]
 prompt_versions:
-  triage: v1
-  impact: v1
+  triage: v2
+  impact: v2
   coder: v1
 console_url: "http://localhost:8000"

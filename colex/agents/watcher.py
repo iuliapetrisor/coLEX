@@ -52,7 +52,8 @@ def parse(path: Path) -> LawDocument:
         text = body[m.end():marks[i + 1].start() if i + 1 < len(marks) else len(body)].strip()
         if not text:
             raise FeedError(f"Article {m.group(1)} is empty (truncated file?)")
-        articles.append(LawArticle(id=f"Art. {m.group(1)}", text=text, effective_dates=_dates(text)))
+        ident = f"Art. {m.group(1)}" + (f" (inserted by Art. {m.group(2)})" if m.group(2) else "")
+        articles.append(LawArticle(id=ident, text=text, effective_dates=_dates(text)))
     try:
         return LawDocument(celex=str(meta["celex"]), title=str(meta["title"]), source=str(meta["source_url"]),
                            published=str(meta["published"]), articles=articles,
