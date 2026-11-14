@@ -1,0 +1,10 @@
+# Counterparty registry: canonical names and aliases. Unknown names found in documents go to a review queue.
+# Provider names other than Amazon Web Services are invented for the demo.
+version: 1
+counterparties:
+  - {id: cp-aws, name: "Amazon Web Services EMEA SARL", aliases: ["AWS", "Amazon Web Services", "amazonaws.com"], type: ict_provider}
+  - {id: cp-smsnord, name: "SMSNord Telecom SRL", aliases: ["SMSNord", "smsnord.example"], type: ict_provider}
+  - {id: cp-verifid, name: "VerifID Solutions SRL", aliases: ["VerifID", "verifid.example"], type: ict_provider}
+  - {id: cp-ledgercore, name: "LedgerCore Systems GmbH", aliases: ["LedgerCore", "ledgercore.example"], type: ict_provider}
+  - {id: cp-cardaxis, name: "CardAxis Processing Ltd", aliases: ["CardAxis", "cardaxis.example"], type: ict_provider}
+  - {id: cp-namematch, name: "NameMatch Europe BV", aliases: ["NameMatch", "namematch.example"], type: ict_provider}

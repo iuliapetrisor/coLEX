@@ -1,0 +1,36 @@
+# Deterministic rules for the Company Map build. First matching rule wins.
+# glob matches "source://path"; `title` is a regular expression on the first heading (optional).
+# A rule may fix the information type, the L1 area and the L2 domain; the L3 topic is chosen by keywords.
+version: 1
+rules:
+  - {glob: "onedrive://*", title: "(?i)agreement|contract", info_type: contract, l1: "Legal & Compliance", l2: Contracts}
+  - {glob: "gdrive://*fee-schedule*", info_type: fee_schedule, l1: Payments, l2: "Fees & Pricing"}
+  - {glob: "gdrive://*terms*", info_type: customer_terms, l1: "Legal & Compliance", l2: "Customer terms"}
+  - {glob: "gdrive://product/*", info_type: page, l1: Payments}
+  - {glob: "confluence://*", title: "(?i)procedure", info_type: procedure, l1: "Technology & Security"}
+  - {glob: "confluence://*", info_type: page, l1: "Technology & Security"}
+  - {glob: "jira://*", info_type: ticket}
+  - {glob: "intranet://hr/*", info_type: policy, l1: People}
+  - {glob: "intranet://*", info_type: page, l1: People}
+  - {glob: "repo://*.yaml", info_type: config, l1: "Technology & Security", l2: Configuration}
+  - {glob: "repo://payments/fees.py", info_type: code, l1: Payments, l2: "Fees & Pricing"}
+  - {glob: "repo://payments/transfer.py", info_type: code, l1: Payments, l2: Transfers}
+  - {glob: "repo://payments/incidents.py", info_type: code, l1: "Technology & Security", l2: "Incident management"}
+  - {glob: "repo://payments/providers.py", info_type: code, l1: "Technology & Security", l2: "ICT third parties"}
+  - {glob: "repo://*.py", info_type: code}
+  - {glob: "*", info_type: page}
+# Rules learned from human assignments in the Unclassified queue are stored in SQLite and applied first.
+
+# Folder conventions: used only when the source system gives no owner. Marked "inferred" in the UI.
+ownership_conventions:
+  - {glob: "intranet://*", team: people, role: HR Manager}
+
+# Names used for teams in source metadata → coLEX team ids.
+team_aliases:
+  legal: legal
+  product: product
+  security: security
+  payments-eng: payments-eng
+  people: people
+  compliance: compliance
+  support: support

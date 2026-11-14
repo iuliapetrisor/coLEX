@@ -1,0 +1,24 @@
+# Checklist for Regulation (EU) 2022/2554 (CELEX 32022R2554), Article 30.
+# paragraph "30(2)": applies to every contract on the use of ICT services.
+# paragraph "30(3)": applies in addition, only to contracts supporting critical or important functions (D-004).
+# `label` is our short name for the clause, NOT the legal text: read the article in sandbox/feed/32022R2554.md.
+# `patterns` are regular expressions (case-insensitive); a clause counts as present when any line matches.
+# Detection is a text heuristic to support a lawyer's review. It is not a legal assessment.
+version: 1
+celex: "32022R2554"
+clauses:
+  - {id: "30(2)(a)", paragraph: "30(2)", label: "description of functions and services, subcontracting conditions", patterns: ["services and functions", "description of (all )?functions"]}
+  - {id: "30(2)(b)", paragraph: "30(2)", label: "locations of services and data processing", patterns: ["locations? of data processing", "processed (and stored )?in ", "data is stored in ", "provided from "]}
+  - {id: "30(2)(c)", paragraph: "30(2)", label: "data protection provisions", patterns: ["availability, authenticity, integrity and confidentiality"]}
+  - {id: "30(2)(d)", paragraph: "30(2)", label: "access, recovery and return of data", patterns: ["access(,| and) recover", "returned? (of|in) "]}
+  - {id: "30(2)(e)", paragraph: "30(2)", label: "service level descriptions", patterns: ["service level"]}
+  - {id: "30(2)(f)", paragraph: "30(2)", label: "assistance in ICT incidents", patterns: ["assists? .{0,60}ICT incident", "assistance in ICT incidents"]}
+  - {id: "30(2)(g)", paragraph: "30(2)", label: "cooperation with competent authorities", patterns: ["cooperates? (fully )?with .{0,40}competent authorit"]}
+  - {id: "30(2)(h)", paragraph: "30(2)", label: "termination rights and notice periods", patterns: ["may terminate", "termination rights"]}
+  - {id: "30(2)(i)", paragraph: "30(2)", label: "participation in security awareness and training", patterns: ["security awareness"]}
+  - {id: "30(3)(a)", paragraph: "30(3)", label: "full service levels with quantitative targets", patterns: ["quantitative (and qualitative )?(performance )?targets"]}
+  - {id: "30(3)(b)", paragraph: "30(3)", label: "notice periods and reporting obligations", patterns: ["reports? (without delay )?any development", "notif(y|ies) .{0,20}of any development"]}
+  - {id: "30(3)(c)", paragraph: "30(3)", label: "business contingency plans and ICT security measures", patterns: ["business contingency"]}
+  - {id: "30(3)(d)", paragraph: "30(3)", label: "participation in threat-led penetration testing", patterns: ["threat-led penetration testing", "\\bTLPT\\b"]}
+  - {id: "30(3)(e)", paragraph: "30(3)", label: "rights of access, inspection and audit", patterns: ["rights? of access, inspection and audit", "audit rights"]}
+  - {id: "30(3)(f)", paragraph: "30(3)", label: "exit strategies and transition period", patterns: ["exit strateg", "transition period"]}

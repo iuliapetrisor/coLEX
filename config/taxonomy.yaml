@@ -1,0 +1,49 @@
+# Closed vocabulary for map levels L1 (business area) → L2 (domain) → L3 (topic).
+# `keywords` are regular expressions (case-insensitive) used to place a resource on an L3 topic.
+# A new topic enters this file only after a human approves it.
+version: 1
+company: PayRo
+areas:
+  Legal & Compliance:
+    Contracts:
+      ICT provider contracts: ["provider", "service level", "subcontract", "data processing"]
+      Other contracts: ["lease", "employment contract", "insurance policy"]
+    Customer terms:
+      Terms and conditions: ["terms and conditions", "your account", "complaints"]
+    Policies:
+      Compliance policies: ["compliance policy", "anti-money laundering", "sanctions"]
+    Regulatory registers:
+      Register of information: ["register of information"]
+  Payments:
+    Transfers:
+      Instant credit transfers: ["instant", "sepa", "under ten seconds"]
+      Verification of Payee: ["payee's name", "name[- ]check", "verify_payee", "wrong iban"]
+      Transfer authorisation: ["authori[sz]e_transfer", "one-time password", "\\botp\\b", "payer_account"]
+    Fees & Pricing:
+      Transfer fees: ["\\bfees?\\b", "fee schedule", "top-up", "fee_for"]
+    Onboarding and KYC:
+      Identity verification: ["identity verification", "kyc", "onboarding"]
+  Technology & Security:
+    Cloud infrastructure:
+      Hosting: ["hosting", "region", "bucket"]
+    Incident management:
+      Major incident reporting: ["incident", "initial report", "final report", "outage", "type: incident"]
+    ICT third parties:
+      Service architecture: ["architecture", "services and providers"]
+      Provider integrations: ["providers?", "_api\\b", "https://", "network access"]
+    Configuration:
+      Pricing configuration: ["percent", "\\.ya?ml"]
+  Finance & Tax:
+    Accounting:
+      Ledger and bookkeeping: ["ledger", "bookkeeping", "invoice"]
+  Customer & Support:
+    Complaints:
+      Complaint handling: ["complaint", "support ticket"]
+  People:
+    HR policies:
+      Leave and absence: ["leave", "sick", "certificate"]
+    Workplace:
+      Office rules: ["office", "desk", "visitors", "reception"]
+  Risk:
+    Operational risk:
+      ICT risk: ["risk assessment", "risk register"]
