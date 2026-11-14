@@ -15,7 +15,7 @@ Merged without a human review, on the full-autonomy ruling. All self-reviewed on
 | `feat/slack/G3-SLK-04` | "merge G3-SLK-04 Slack notifier and handlers" | `colex/notify/handlers.py` (`_allowed`: who may decide; dedupe of clicks), `colex/notify/app.py` (tokens read from the environment). Tested with a fake client only. The manifest scopes were not changed. |
 | `feat/ui/G3-UI-01` | "merge G3-UI-01 Console, server and kill/restart check" | **The Console has no login**: anyone who can reach it can answer legal questions and approve changes as `console-user`. It binds to 127.0.0.1 (`colex/server.py`, checked: not reachable on the LAN address). `colex/api/actions.py` holds every state-changing route. |
 | `feat/qa/G3-QA-05` | "merge G3-QA-05 make eval, results, GitOps ceiling fix" | `colex/gitops/core.py`: agent git now runs only in the sandbox repository or its worktrees, with every ancestor directory as a git ceiling. Before this, a git command run exactly in the state directory would have found the coLEX project repository; no call site did that. |
-| `feat/ui/G4-UI-07` | "merge G4-UI-07 PayRo demo app" | `payro_app/runner.py` executes the `payments` code of a chosen branch (model-written, possibly unreviewed) in a subprocess: scrubbed environment, no network, **no file-system sandbox**. Read-only git only. No login, 127.0.0.1 only. |
+| `feat/ui/G4-UI-07`, `feat/ui/G4-UI-08` | "merge G4-UI-07 PayRo demo app", "merge G4-UI-08 one PayRo app" | `payro_app/repo.py` executes the `payments` code checked out in the sandbox repository in a subprocess: scrubbed environment, no network, **no file-system sandbox**. After a human merges a coLEX branch, that code is model-written. Read-only git only. No login, 127.0.0.1 only. |
 | `feat/coder/G3-COD-01` | "merge G3-COD-01 remediation coder, GitOps, test sandbox" | `colex/gitops/core.py` (git subcommand allowlist; the `reference-transaction` hook text), `colex/testrunner/__init__.py` (environment passed to sandboxed tests, limits, network block), `colex/agents/coder_apply.py` (which files the coder may edit). Check: `tests/security/test_merge_lock.py`, `tests/security/test_runner_sandbox.py`. |
 
 Every merge above was reviewed only by the session that wrote it. None had an independent review.
@@ -30,7 +30,7 @@ make demo                  # same, calling OpenRouter (answers cached in var/llm
 make map                   # build the Company Map and print its statistics
 make record                # re-record the offline answers after changing a prompt
 make console               # Console at http://127.0.0.1:8000 on the demo state (SLACK=0 to keep Slack off)
-make payro                 # fictional PayRo app at http://127.0.0.1:8001 (before / after a coLEX change)
+make payro                 # fictional PayRo app at http://127.0.0.1:8001: runs `main` of the sandbox repository; changes after a human merge
 make eval                  # docs/RESULTS.md from the recorded run
 make slack-check           # read-only: auth, Socket Mode, channels; posts nothing
 bash tests/chaos/kill_restart.sh   # kill -9 and restart check, offline

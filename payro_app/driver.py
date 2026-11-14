@@ -1,4 +1,4 @@
-"""Runs INSIDE one version of the PayRo code: the working directory is a copy of the repository at one commit.
+"""Runs INSIDE the PayRo repository: the working directory is the repository folder, at whatever commit is checked out.
 
 Reads a JSON request on stdin, calls the real `payments` code of that version and prints a JSON result.
 Only the outside world is simulated: the provider network (`providers._post`) answers from a small

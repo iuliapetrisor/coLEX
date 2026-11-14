@@ -9,7 +9,12 @@ border:1px solid #c9d0db;color:#1b1f2a;text-decoration:none} .tabs a.on{backgrou
 form.in{background:#fff;border:1px solid #d5dae3;border-radius:10px;padding:10px 14px;margin-bottom:14px}
 form.in label{margin-right:14px;font-size:14px} input,select,button{font:inherit;padding:3px 6px}
 button{background:#0b6e4f;color:#fff;border:0;border-radius:6px;padding:5px 14px;cursor:pointer}
-.pair{display:flex;gap:26px;flex-wrap:wrap;justify-content:center}
+.cols{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start} .side{flex:1;min-width:340px}
+.side .law{margin:0 0 14px} small{display:block} .prop{border-top:1px solid #edf0f4;padding:8px 0;margin-top:8px}
+.cmd{display:block;background:#1b1f2a;color:#e8f5ee;padding:6px 8px;border-radius:6px;margin-top:5px;
+word-break:break-all} .prop ul{margin:4px 0;padding-left:18px;font-size:13px}
+table.log{border-collapse:collapse;font-size:13px;width:100%;margin-top:6px}
+table.log td{padding:3px 6px;border-top:1px solid #edf0f4;vertical-align:top}
 .phone{width:360px;background:#fff;border:9px solid #1b1f2a;border-radius:34px;padding:0 0 14px;overflow:hidden}
 .bar{background:#0b6e4f;color:#fff;padding:12px 16px;font-weight:700;font-size:19px}
 .bar span{float:right;font-size:11px;font-weight:400;border:1px solid #fff;border-radius:8px;padding:1px 6px;margin-top:4px}
