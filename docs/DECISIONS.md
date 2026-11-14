@@ -1,0 +1,15 @@
+# coLEX Decision Log
+
+Entry format: `D-NNN | date | decision | one-line rationale | decided by`
+
+D-001 | 2026-11-14 | `related` is the canonical map tool; `neighbors` stays as a thin alias. | Brief §4 diagram says `neighbors`, §3.5 defines `related`, and the starter code uses `neighbors`. | Orchestrator
+D-002 | 2026-11-14 | The stage gates are the ones in `docs/roles/README.md` §4. | Brief §6.1 points to "§7", but §7 is Evaluation. | Orchestrator
+D-003 | 2026-11-14 | Orchestration is a plain, explicit Python state machine; the ADK spike is optional (30 min, only if G0 is green). | Fewest moving parts for the e2e path. | Orchestrator
+D-004 | 2026-11-14 | The DORA Art. 30 checklist tags each clause with its paragraph, 30(2) or 30(3); the Legal-Logic Skeptic verifies it against the official text. | 30(3) applies only to contracts supporting critical or important functions; mixing them over-flags. | Orchestrator
+D-005 | 2026-11-14 | The PR target is a local git branch plus the diff in the Console; a real GitHub PR is a stretch goal. | Keeps the demo offline-capable. | Orchestrator
+D-006 | 2026-11-14 | `make demo` calls OpenRouter live by default, `make demo OFFLINE=1` replays fixtures, `make test` is always offline. | Network-failure fallback for the pitch. | Orchestrator
+D-007 | 2026-11-14 | Rollup summaries are deterministic templates; the cheap-model polish is optional and cached. | Reproducible and cheap map builds. | Orchestrator
+D-008 | 2026-11-14 | Repo layout: brief at `docs/PROJECT_BRIEF.md`; shared rules (the root `README` carrying §3b) at `docs/roles/README.md`, superseding the older `roles/README.md`; role files in `docs/roles/`; starters and Slack manifest in `docs/`. Root `README.md` is reserved for the product README (brief §9). | The brief, the role files and the commit policy all reference these paths; they did not exist. | Orchestrator
+D-009 | 2026-11-14 | Task area `ORC` is added for orchestrator-owned tasks (layout, contracts, board). | README §3 lists no area for work the orchestrator authors at G0. | Orchestrator
+D-011 | 2026-11-14 | OPEN, needs a human ruling. The §3b step-3 secret grep matches the documentation lines that spell out the token prefixes (the policy text itself, the Slack starter comments, role files). Until ruled otherwise, a commit proceeds only if every match is a prefix placeholder with no token body, checked with a second token-shaped pattern, and the commit body says so. The G0-SEC-01 hook must implement the same distinction. | The literal rule "must return nothing" cannot hold for the file that defines it. | Pending: humans
+D-010 | 2026-11-14 | OPEN, needs a human ruling. This build session has no agent-dispatch facility, so one session does the work of every role, attributed by branch (`feat/<role>/<task-id>`) and commit scope. A same-session review is not an independent Code Breaker review, so no feature branch is merged to `main` and no gate is tagged until the humans decide how the review gate is met. | The merge rule (§3b) requires a Code Breaker review before merge; the orchestrator cannot waive it. | Pending: humans
