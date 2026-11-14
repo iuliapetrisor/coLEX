@@ -1,0 +1,3 @@
+# Runtime dependencies. Keep this list small (brief §2).
+pydantic>=2.6,<3
+PyYAML>=6
