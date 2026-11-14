@@ -38,3 +38,5 @@ Tasks for later gates are defined in the `§Tasks` table of each role file in `d
 ## Session log
 
 New commits per role are reported to the humans at the end of each work session and recorded here.
+
+- 2026-11-14 · **Correction:** commit `91e3300` on `main` carries the wrong message. It repeats the message of merge `2741fe3`, but it is not a merge: it only updates this board (G0-QA-01 progress and commit list, G0-SEC-01 set to doing). Cause: the orchestrator's commit command reused a stale message file. The commit was already pushed, so it is not amended (§3b). Read it as `docs(tasks): record G0-QA-01 progress, start G0-SEC-01`.
