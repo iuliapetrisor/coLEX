@@ -6,7 +6,7 @@ from html import escape as e
 from typing import Any, Iterable
 from urllib.parse import quote
 
-NAV = [("/", "Runs"), ("/feed", "Feed"), ("/map", "Map"), ("/registers", "Registers"),
+NAV = [("/", "Runs"), ("/feed", "Feed"), ("/map", "Map"), ("/map/picture", "Map picture"), ("/registers", "Registers"),
        ("/slack", "Slack delivery"), ("/settings", "Settings")]
 CSS = """
 body{font:17px/1.45 system-ui,sans-serif;margin:0;color:#1b1f2a;background:#f6f7f9}
@@ -27,13 +27,14 @@ STATUS_CLASS = {"done": "done", "running": "running", "failed": "failed", "cance
                 "decided": "done", "answered": "done", "relevant": "running", "archived": "muted", "gap": "waiting"}
 
 
-def page(title: str, body: str, refresh: int = 0) -> str:
+def page(title: str, body: str, refresh: int = 0, wide: bool = False) -> str:
     nav = " ".join(f'<a href="{href}">{text}</a>' for href, text in NAV)
     meta = f'<meta http-equiv="refresh" content="{refresh}">' if refresh else ""
+    main = "<main style='max-width:1560px'>" if wide else "<main>"
     return (f"<!doctype html><html lang='en'><head><meta charset='utf-8'>{meta}<title>{e(title)} · coLEX</title>"
             f"<style>{CSS}</style></head><body><header><b>coLEX Console</b> {nav}"
             "<span class='tag'>FICTIONAL PayRo data · decision support, not legal advice</span></header>"
-            f"<main><h1>{e(title)}</h1>{body}</main></body></html>")
+            f"{main}<h1>{e(title)}</h1>{body}</main></body></html>")
 
 
 def badge(status: Any) -> str:

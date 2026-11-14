@@ -1,0 +1,98 @@
+[
+ {
+  "celex": "32024R0886",
+  "added": 0,
+  "resources": 21,
+  "corpus_tokens": 5424,
+  "model": "openai/gpt-4.1-mini",
+  "date": "2026-11-14",
+  "seconds": 2,
+  "expected": 4,
+  "found": 2,
+  "missed": [
+   "gdrive://product/fee-schedule.md",
+   "repo://payments/transfer.py"
+  ],
+  "reported": 4,
+  "reported_uris": [
+   "gdrive://product/terms-and-conditions.md",
+   "repo://payments/fees.yaml",
+   "repo://payments/providers.py",
+   "repo://payments/transfer.py"
+  ],
+  "on_generated_documents": 0,
+  "dropped_by_validator": 0,
+  "finished_by_itself": false,
+  "impact_model_calls": 40,
+  "tool_calls": 31,
+  "context_tokens_read": 7015,
+  "share_of_corpus": 1.293,
+  "fragments_read": 64,
+  "fragments_total": 139,
+  "model_tokens": 580728,
+  "cost_usd": 0.0
+ },
+ {
+  "celex": "32024R0886",
+  "added": 1000,
+  "resources": 1021,
+  "corpus_tokens": 107112,
+  "model": "openai/gpt-4.1-mini",
+  "date": "2026-11-14",
+  "seconds": 71,
+  "expected": 4,
+  "found": 2,
+  "missed": [
+   "repo://payments/fees.yaml",
+   "repo://payments/transfer.py"
+  ],
+  "reported": 3,
+  "reported_uris": [
+   "gdrive://product/fee-schedule.md",
+   "gdrive://product/terms-and-conditions.md",
+   "onedrive://legal/contracts/name-check-pilot-namematch.md"
+  ],
+  "on_generated_documents": 0,
+  "dropped_by_validator": 0,
+  "finished_by_itself": false,
+  "impact_model_calls": 40,
+  "tool_calls": 36,
+  "context_tokens_read": 12285,
+  "share_of_corpus": 0.115,
+  "fragments_read": 51,
+  "fragments_total": 2521,
+  "model_tokens": 776726,
+  "cost_usd": 0.096
+ },
+ {
+  "celex": "32024R0886",
+  "added": 5000,
+  "resources": 5021,
+  "corpus_tokens": 516167,
+  "model": "openai/gpt-4.1-mini",
+  "date": "2026-11-14",
+  "seconds": 56,
+  "expected": 4,
+  "found": 3,
+  "missed": [
+   "repo://payments/transfer.py"
+  ],
+  "reported": 3,
+  "reported_uris": [
+   "gdrive://product/fee-schedule.md",
+   "gdrive://product/terms-and-conditions.md",
+   "repo://payments/fees.yaml"
+  ],
+  "on_generated_documents": 0,
+  "dropped_by_validator": 0,
+  "finished_by_itself": true,
+  "impact_model_calls": 33,
+  "tool_calls": 32,
+  "context_tokens_read": 16546,
+  "share_of_corpus": 0.032,
+  "fragments_read": 31,
+  "fragments_total": 12123,
+  "model_tokens": 685695,
+  "cost_usd": 0.0861
+ }
+]
