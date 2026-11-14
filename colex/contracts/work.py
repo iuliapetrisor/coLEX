@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import date
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from colex.contracts.common import Confidence, Contract, LineRange, NonBlank, NonNegInt
 
@@ -39,8 +39,15 @@ class Question(Contract):
 
     to_team: NonBlank
     text: NonBlank
-    options: list[str] = Field(default_factory=list)
-    blocking_items: list[str] = Field(default_factory=list)
+    options: list[NonBlank] = Field(default_factory=list)
+    blocking_items: list[NonBlank] = Field(default_factory=list)
+
+    @field_validator("options")
+    @classmethod
+    def _options_are_unique(cls, value: list[str]) -> list[str]:
+        if len(set(value)) != len(value):
+            raise ValueError("options must be unique")
+        return value
 
 
 class Notification(Contract):

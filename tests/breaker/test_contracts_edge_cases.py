@@ -34,7 +34,6 @@ def test_checkpoint_budgets_must_be_finite_and_non_negative(value):
         c.Checkpoint.model_validate({**VALID["Checkpoint"], "budgets_used": {"cost_usd": value}})
 
 
-@pytest.mark.xfail(strict=True, reason="R-006")
 @pytest.mark.parametrize(
     "field, value",
     [("options", ["yes", ""]), ("options", ["yes", "yes"]), ("blocking_items", ["  "])],
