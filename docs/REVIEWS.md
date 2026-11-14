@@ -37,3 +37,31 @@ Evidence: `tests/breaker/test_harness_c_socket.py::test_c_level_socket_connect_i
 Proposed fix: an in-process patch is impossible. Run the test process in a network namespace (`unshare -n`) where the host allows it, together with the sandboxed test runner (G1-COD-02).
 Builder response: DEFER. No code in the repo uses `_socket` directly; the limit is documented in the `tests/conftest.py` docstring.
 Orchestrator ruling: Deferred to G1-COD-02 (network namespace for test subprocesses). Stays open; the strict-xfail test remains as the reminder.
+
+[R-003] [Severity: Major] [Contracts] [Code Breaker. Reviewer: same-session self-review (not independent)]
+Claim: `AuditEvent.ts`, `Checkpoint.ts` and `ConfigVersion.ts` accept timestamps without a timezone. Subtracting one from a timezone-aware timestamp raises `TypeError`, which would break the "law published → first notification" time metric and the timeline ordering.
+Evidence: `tests/breaker/test_contracts_edge_cases.py::test_timestamps_without_timezone_are_rejected` (fails at cfe6601 with `--runxfail`). Probe at cfe6601: `TypeError: can't subtract offset-naive and offset-aware datetimes`.
+Proposed fix: type the three fields as timezone-aware datetimes.
+Builder response: pending
+Orchestrator ruling: pending
+
+[R-004] [Severity: Major] [Contracts] [Code Breaker. Reviewer: same-session self-review (not independent)]
+Claim: `ResourceCard` accepts contradictory ownership: no owner with `ownership_source="explicit"`, or an owner with `ownership_source="unknown"`. The "owner unknown → #compliance" routing (brief §3.2) depends on these two fields agreeing.
+Evidence: `tests/breaker/test_contracts_edge_cases.py::test_ownership_source_must_agree_with_owner_team` (fails at cfe6601 with `--runxfail`).
+Proposed fix: a model validator: `owner_team is None` if and only if `ownership_source == "unknown"`.
+Builder response: pending
+Orchestrator ruling: pending
+
+[R-005] [Severity: Major] [Contracts] [Code Breaker. Reviewer: same-session self-review (not independent)]
+Claim: `Checkpoint.budgets_used` accepts infinite, NaN and negative values. An infinite value is written to JSON as `null`, and the checkpoint then fails to load: a checkpoint that cannot be resumed from.
+Evidence: `tests/breaker/test_contracts_edge_cases.py::test_checkpoint_budgets_must_be_finite_and_non_negative` (fails at cfe6601 with `--runxfail`). Probe at cfe6601: dump then load of a checkpoint with `inf` raises a `float_type` validation error.
+Proposed fix: budget values are finite floats ≥ 0.
+Builder response: pending
+Orchestrator ruling: pending
+
+[R-006] [Severity: Minor] [Contracts] [Code Breaker. Reviewer: same-session self-review (not independent)]
+Claim: `Question.options` accepts blank and duplicate entries, and `Question.blocking_items` accepts blank ids. Options become Slack buttons, which need distinct, non-empty labels and action ids.
+Evidence: `tests/breaker/test_contracts_edge_cases.py::test_question_options_and_blocking_items_are_non_blank_and_unique` (fails at cfe6601 with `--runxfail`).
+Proposed fix: non-blank elements in both lists and unique options.
+Builder response: pending
+Orchestrator ruling: pending
