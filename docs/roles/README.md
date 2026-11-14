@@ -101,8 +101,13 @@ Refs: D-004, R-012          (optional: decisions / review findings)
 - Work on `feat/<role>/<task-id>` (e.g. `feat/map/G1-MAP-05`), branched from the latest `main`.
 - **Push your branch after every commit**, if a remote exists, so progress is visible.
 - Only the **orchestrator** merges into `main`, with `git merge --no-ff`, which keeps the individual commits. The orchestrator merges only after the Code Breaker's review of that diff. No squash merges.
+- **When one session does every role's work (ruling D-010):**
+  - One branch per task, always based on the latest `main`. No stacking.
+  - Before merging a code branch, run a separate Code Breaker pass on its diff: failing tests in `tests/breaker/` (strict xfail), findings in `REVIEWS.md` labeled `Reviewer: same-session self-review (not independent)`. Fix Critical and Major findings or record them as DEFER. Merge only if `make test` is green on the branch.
+  - **Human review is mandatory before merge** for anything touching the merge lock / GitOps, secrets / `.env` handling / the pre-commit hook, Slack approver authorization, redaction, or the Slack manifest scopes. Push the branch, wait for the human, and continue on other tasks meanwhile.
+  - Docs-only orchestrator commits (`docs(tasks|decision|review)`) go directly to `main`.
 - Forbidden: `git push --force` to `main`, `--amend` or rebase on already-pushed commits, committing directly to `main` (except the orchestrator's `docs(tasks|decision|review)` updates).
-- On passing a gate, the orchestrator creates an annotated tag: `git tag -a g1 -m "G1 passed: map & sandbox"`.
+- On passing a gate, the orchestrator creates an annotated tag: `git tag -a g1 -m "G1 passed: map & sandbox"`. Under D-010 the orchestrator never tags on its own judgment: it stops and tells the humans the gate looks ready, an independent session reviews the diff since the previous tag, and the tag is created only when that review has no open Critical findings.
 
 ### Testers (adversarial roles)
 - The Code Breaker commits each reproducing test as `@pytest.mark.xfail(strict=True, reason="R-<id>")`, with message `test(breaker): ...`. `make test` stays green.
@@ -111,6 +116,7 @@ Refs: D-004, R-012          (optional: decisions / review findings)
 
 ### Reporting
 After each commit, update your row in `docs/TASKS.md` (in the same commit or the next `docs(tasks)` commit). At the end of a task, list the commit hashes in the task row.
+At the end of each work session, the orchestrator reports to the humans: merged branches and commits (hash + message) per role, branches waiting for human review, and the open self-review findings (D-010).
 
 ---
 
