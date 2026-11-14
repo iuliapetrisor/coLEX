@@ -60,7 +60,8 @@ slack-check: setup
 eval: setup
 	COLEX_OFFLINE=$(if $(LIVE),,1) $(BIN)/python tests/eval/run_eval.py
 
-# The fictional PayRo customer app: runs the real payments code of main and of a coLEX branch, side by side.
+# The fictional PayRo customer app: runs the payments code that is checked out in the sandbox repository,
+# so it behaves differently after a human merges a coLEX branch (reload the page, or restart it).
 # Reads the sandbox repository of the demo state (var/demo/repo). Local only, no login.
 PAYRO_PORT ?= 8001
 .PHONY: payro

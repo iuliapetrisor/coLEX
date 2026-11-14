@@ -1,7 +1,7 @@
-"""One panel per version of the code: a phone for the customer scenarios, a desk view for incidents.
+"""The PayRo screen for one request: a phone for the customer scenarios, a desk view for incidents.
 
-Every value shown comes from running that version's code. Text written by that code (for example the
-message of a stopped transfer) is escaped before it is shown.
+Every value shown comes from running the code that is checked out. Text written by that code (for
+example the message of a stopped transfer) is escaped before it is shown.
 """
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from html import escape as e
 from typing import Any
 from urllib.parse import urlencode
 
-from payro_app.scenario import IBANS
+from payro_app.inputs import IBANS
 
 NAME_RESULT = {"match": "the name matches the account", "close_match": "the name is close, but not the same",
                "no_match": "the name does NOT match the account", "unavailable": "the name could not be checked"}
@@ -23,29 +23,29 @@ def money(value: Any) -> str:
         return "?"
 
 
-def _head(v: dict[str, Any], res: dict[str, Any]) -> str:
-    if v["ref"] in ("original", "main"):
-        status, cls = v["title"], "live"
-    elif v["merged"]:
-        status, cls = "coLEX change · merged into main", "live"
-    else:
-        status, cls = "coLEX change · proposed, NOT merged", "draft"
-    title = f"<br>{e(v['title'])}" if v["ref"] not in ("original", "main") else ""
-    return (f"<div class='bar'>PayRo <span>FICTIONAL demo</span></div><div class='ver {cls}'><b>{e(v['ref'])}</b> "
-            f"<code>{e(res.get('sha', '')[:8])}</code><br>{e(status)}{title}</div>")
+def _frame(title: str, body: str) -> str:
+    return (f"<div class='phone'><div class='bar'>PayRo <span>FICTIONAL demo</span></div>"
+            f"<h3>{e(title)}</h3>{body}</div>")
 
 
-def _broken(res: dict[str, Any], key: str) -> str | None:
+def _broken(res: dict[str, Any], *keys: str) -> str | None:
     if res.get("error"):
         return str(res["error"])
-    part = res.get(key)
-    return str(part["error"]) if isinstance(part, dict) and part.get("error") else None
+    for key in keys:
+        part = res.get(key)
+        if isinstance(part, dict) and part.get("error"):
+            return str(part["error"])
+    return None
 
 
-def phone(v: dict[str, Any], state: dict[str, str], res: dict[str, Any]) -> str:
-    problem = _broken(res, "transfer") or _broken(res, "fees")
+def _failed(problem: str) -> str:
+    return _frame("Something went wrong", f"<div class='out bad'>The code that is checked out failed: {e(problem)}</div>")
+
+
+def phone(state: dict[str, str], res: dict[str, Any]) -> str:
+    problem = _broken(res, "transfer", "fees")
     if problem:
-        return f"<div class='phone'>{_head(v, res)}<div class='out bad'>This version of the code failed: {e(problem)}</div></div>"
+        return _failed(problem)
     eur, t, instant = res["fees"].get("eur", {}), res["transfer"], state["instant"] == "1"
     std, ins = eur.get("standard"), eur.get("instant")
     opts = "".join(f"<div class='opt{' sel' if chosen else ''}'>{label}<b>{money(fee)}</b></div>"
@@ -59,7 +59,7 @@ def phone(v: dict[str, Any], state: dict[str, str], res: dict[str, Any]) -> str:
     calls = res.get("network_calls", [])
     checks = []
     if not any(c["service"] == "name check" for c in calls):
-        checks.append("<li class='bad'>Payee name: not checked by this version</li>")
+        checks.append("<li class='bad'>Payee name: not checked</li>")
     for c in calls:
         if c["service"] == "name check":
             ok = c.get("result") == "match"
@@ -78,18 +78,18 @@ def phone(v: dict[str, Any], state: dict[str, str], res: dict[str, Any]) -> str:
             link = urlencode({**state, "confirmed": "1"})
             again = f"<br><a class='btn' href='?{e(link)}'>I have checked the payee · send anyway</a>"
         out = f"<div class='out warn'><b>Stopped before sending</b><br>{e(t.get('message', ''))}{again}</div>"
-    return (f"<div class='phone'>{_head(v, res)}<h3>Send money</h3>"
-            f"<div class='row'><span>To</span>{e(state['name'])}</div>"
-            f"<div class='row'><span>Account</span>{e(IBANS[state['iban']])}</div>"
-            f"<div class='row'><span>Amount</span>{money(state['amount'])}</div>"
-            f"<div class='opts'>{opts}</div>{compare}{out}"
-            f"<div class='chk'>What this version checked, in order:<ul>{''.join(checks)}</ul></div></div>")
+    return _frame("Send money",
+                  f"<div class='row'><span>To</span>{e(state['name'])}</div>"
+                  f"<div class='row'><span>Account</span>{e(IBANS[state['iban']])}</div>"
+                  f"<div class='row'><span>Amount</span>{money(state['amount'])}</div>"
+                  f"<div class='opts'>{opts}</div>{compare}{out}"
+                  f"<div class='chk'>What the app did, in order:<ul>{''.join(checks)}</ul></div>")
 
 
-def desk(v: dict[str, Any], state: dict[str, str], res: dict[str, Any]) -> str:
+def desk(state: dict[str, str], res: dict[str, Any]) -> str:
     problem = _broken(res, "incident_plan")
     if problem:
-        return f"<div class='phone'>{_head(v, res)}<div class='out bad'>This version of the code failed: {e(problem)}</div></div>"
+        return _failed(problem)
     aware = datetime.fromisoformat(state["aware"])
     rows = ""
     for step in res["incident_plan"]:
@@ -98,8 +98,8 @@ def desk(v: dict[str, Any], state: dict[str, str], res: dict[str, Any]) -> str:
         after = f"{hours:.0f} h" if hours < 96 else f"{hours / 24:.0f} days"
         rows += (f"<div class='row'><span>{e(step['report'].capitalize())} report</span>"
                  f"{due:%d %b %Y, %H:%M}<small>{after} after awareness</small></div>")
-    return (f"<div class='phone'>{_head(v, res)}<h3>Incident desk · reports due</h3>"
-            f"<div class='row'><span>Noticed</span>{aware:%d %b %Y, %H:%M}</div>"
-            f"<div class='row'><span>Classified major</span>{datetime.fromisoformat(state['classified']):%d %b %Y, %H:%M}"
-            f"</div><div class='cmp {'good' if len(res['incident_plan']) >= 3 else 'bad'}'>"
-            f"{len(res['incident_plan'])} report(s) planned by this version</div>{rows}</div>")
+    count = len(res["incident_plan"])
+    return _frame("Incident desk · reports due",
+                  f"<div class='row'><span>Noticed</span>{aware:%d %b %Y, %H:%M}</div><div class='row'>"
+                  f"<span>Classified major</span>{datetime.fromisoformat(state['classified']):%d %b %Y, %H:%M}</div>"
+                  f"<div class='cmp {'good' if count >= 3 else 'bad'}'>{count} report(s) planned</div>{rows}")
