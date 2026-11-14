@@ -1,0 +1,70 @@
+# coLEX configuration. Every save from the Console becomes a new version in SQLite.
+# No secrets here: keys and tokens live in .env only.
+models:
+  # OpenRouter model IDs, checked against https://openrouter.ai/api/v1/models on 2026-11-14 (D-015).
+  # MODEL_CHEAP / MODEL_STRONG in the environment override these.
+  cheap: openai/gpt-4.1-mini
+  strong: openai/gpt-4.1-mini
+agent_models:
+  triage: cheap
+  impact: strong
+  coder: strong
+  liaison: cheap
+  mention: cheap
+budgets:
+  max_tokens_per_run: 600000
+  max_cost_usd_per_law: 1.0
+  max_impact_steps: 40
+  max_coder_iterations: 3
+  max_grounding_retries: 2
+  llm_max_attempts: 3
+  llm_timeout_s: 90
+  test_timeout_s: 60
+triage:
+  relevance_threshold: 0.5
+  borderline_band: 0.15
+routing:
+  team_channels:
+    legal: "#legal"
+    compliance: "#compliance"
+    payments-eng: "#payments-eng"
+    product: "#product"
+    support: "#support"
+    security: "#security"
+  action_channels: {}
+  unknown_owner_channel: "#compliance"
+  review_channel: "#payments-eng"
+  # Slack user IDs. Empty lists mean "nobody mapped yet": fill them in from Settings.
+  approvers:
+    legal: []
+    engineer: []
+  mentions: {}
+map:
+  classification_threshold: 0.6
+  max_items: 25
+  max_chars: 6000
+connectors:
+  onedrive: sandbox/onedrive
+  gdrive: sandbox/gdrive
+  confluence: sandbox/confluence
+  jira: sandbox/jira
+  intranet: sandbox/intranet
+  repo: sandbox/repo_seed
+profile:
+  name: PayRo SRL
+  fictional: true
+  entity_type: payment institution
+  licence: "Payment institution authorised under Directive (EU) 2015/2366"
+  supervisor: National Bank of Romania (BNR)
+  member_state: Romania
+  member_state_currency_is_euro: false
+  jurisdictions: [RO, EU]
+  activities: [money transfers, credit transfers, instant credit transfers in euro and RON, payment accounts]
+  currencies: [RON, EUR]
+  uses_ict_third_party_providers: true
+  not_provided: [crypto-asset services, insurance, lending, investment services, agriculture, fisheries, trade in goods]
+prompt_versions:
+  triage: v1
+  impact: v1
+  coder: v1
+console_url: "http://localhost:8000"
