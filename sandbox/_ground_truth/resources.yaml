@@ -1,0 +1,27 @@
+# Hidden ground truth for evaluation: expected map facts per resource. Runtime code must never read this file.
+# FICTIONAL – PayRo SRL is a fabricated company for the coLEX demo
+# path: expected primary path (null = Unclassified queue). owner: null = unknown owner.
+# critical: true / false / null (not assessed). missing: DORA Art. 30 clause ids expected as gaps.
+ICT: &ict "PayRo › Legal & Compliance › Contracts › ICT provider contracts"
+resources:
+  - {uri: "onedrive://legal/contracts/cloud-hosting-aws.md", type: contract, path: *ict, owner: legal, source: explicit, counterparty: cp-aws, critical: true, missing: []}
+  - {uri: "onedrive://legal/contracts/sms-otp-smsnord.md", type: contract, path: *ict, owner: legal, source: explicit, counterparty: cp-smsnord, critical: true, missing: ["30(3)(e)"]}
+  - {uri: "onedrive://legal/contracts/core-banking-ledgercore.md", type: contract, path: *ict, owner: legal, source: explicit, counterparty: cp-ledgercore, critical: true, missing: ["30(3)(f)"]}
+  - {uri: "onedrive://legal/contracts/card-processing-cardaxis.md", type: contract, path: *ict, owner: legal, source: explicit, counterparty: cp-cardaxis, critical: null, missing: []}
+  - {uri: "onedrive://legal/contracts/name-check-pilot-namematch.md", type: contract, path: *ict, owner: legal, source: explicit, counterparty: cp-namematch, critical: false, missing: []}
+  - {uri: "onedrive://shared/vendor-kyc-agreement.md", type: contract, path: *ict, owner: null, source: unknown, counterparty: cp-verifid, critical: false, missing: ["30(2)(b)"]}
+  - {uri: "gdrive://product/fee-schedule.md", type: fee_schedule, path: "PayRo › Payments › Fees & Pricing › Transfer fees", owner: product, source: explicit}
+  - {uri: "gdrive://product/terms-and-conditions.md", type: customer_terms, path: "PayRo › Legal & Compliance › Customer terms › Terms and conditions", owner: product, source: explicit}
+  - {uri: "gdrive://product/one-pager-instant-transfers.md", type: page, path: "PayRo › Payments › Transfers › Instant credit transfers", owner: product, source: explicit}
+  - {uri: "confluence://ENG/incident-procedure.md", type: procedure, path: "PayRo › Technology & Security › Incident management › Major incident reporting", owner: security, source: explicit}
+  - {uri: "confluence://ENG/architecture.md", type: page, path: "PayRo › Technology & Security › ICT third parties › Service architecture", owner: payments-eng, source: explicit}
+  - {uri: "jira://PAY/PAY-101.md", type: ticket, path: "PayRo › Technology & Security › Incident management › Major incident reporting", owner: payments-eng, source: explicit}
+  - {uri: "jira://PAY/PAY-214.md", type: ticket, path: "PayRo › Payments › Transfers › Verification of Payee", owner: payments-eng, source: explicit}
+  - {uri: "intranet://hr/leave-policy.md", type: policy, path: "PayRo › People › HR policies › Leave and absence", owner: people, source: inferred}
+  - {uri: "intranet://hr/office-rules.md", type: policy, path: "PayRo › People › Workplace › Office rules", owner: people, source: inferred}
+  - {uri: "intranet://canteen-menu.md", type: page, path: null, owner: people, source: inferred}
+  - {uri: "repo://payments/transfer.py", type: code, path: "PayRo › Payments › Transfers › Transfer authorisation", owner: payments-eng, source: explicit}
+  - {uri: "repo://payments/fees.yaml", type: config, path: "PayRo › Technology & Security › Configuration › Pricing configuration", owner: product, source: explicit}
+  - {uri: "repo://payments/fees.py", type: code, path: "PayRo › Payments › Fees & Pricing › Transfer fees", owner: payments-eng, source: explicit}
+  - {uri: "repo://payments/incidents.py", type: code, path: "PayRo › Technology & Security › Incident management › Major incident reporting", owner: security, source: explicit}
+  - {uri: "repo://payments/providers.py", type: code, path: "PayRo › Technology & Security › ICT third parties › Provider integrations", owner: payments-eng, source: explicit}

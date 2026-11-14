@@ -1,0 +1,5 @@
+# FICTIONAL – PayRo SRL is a fabricated company for the coLEX demo
+# Last matching pattern wins.
+payments/               @payro/payments-eng
+payments/fees.yaml      @payro/product
+payments/incidents.py   @payro/security

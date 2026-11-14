@@ -1,0 +1,5 @@
+# FICTIONAL – PayRo SRL is a fabricated company for the coLEX demo
+# Stands in for Confluence page and space owners. Longest matching path prefix wins.
+owners:
+  ENG/: {team: payments-eng, role: Engineering Manager, approver: CTO, steward: legal}
+  ENG/incident-procedure.md: {team: security, role: Head of Security, approver: CTO, steward: legal}

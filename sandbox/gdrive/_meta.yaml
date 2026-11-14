@@ -1,0 +1,4 @@
+# FICTIONAL – PayRo SRL is a fabricated company for the coLEX demo
+# Stands in for the Google Drive owner metadata.
+owners:
+  product/: {team: product, role: Head of Product, approver: Chief Product Officer, steward: legal}
