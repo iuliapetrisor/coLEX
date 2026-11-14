@@ -36,3 +36,20 @@ map: setup
 record: setup
 	rm -f tests/fixtures/llm/*.json
 	COLEX_LLM_MODE=record $(BIN)/python -m colex.demo --quiet
+
+# Console + engine (+ real Slack when SLACK_BOT_TOKEN and SLACK_APP_TOKEN are in .env; SLACK=0 turns it off).
+# Serves the state of the last `make demo` (var/demo). Listens on 127.0.0.1 only: the Console has no login.
+PORT ?= 8000
+SLACK ?= 1
+.PHONY: console reset
+console: setup
+	COLEX_VAR=var/demo COLEX_PORT=$(PORT) COLEX_SLACK=$(SLACK) COLEX_OFFLINE=$(OFFLINE) $(BIN)/python -m colex.server
+
+# Delete the demo state (runs, map, sandbox repository copy). Keeps the model answer cache.
+reset:
+	rm -rf var/demo
+
+# Read-only check of the real Slack workspace: auth, Socket Mode, channels. Posts nothing.
+.PHONY: slack-check
+slack-check: setup
+	$(BIN)/python tools/slack_check.py

@@ -13,7 +13,7 @@ CASSETTES = ROOT / "tests" / "fixtures" / "llm"
 
 
 def var_dir() -> Path:
-    path = Path(os.environ.get("COLEX_VAR", ROOT / "var"))
+    path = Path(os.environ.get("COLEX_VAR", ROOT / "var")).resolve()
     path.mkdir(parents=True, exist_ok=True)
     return path
 

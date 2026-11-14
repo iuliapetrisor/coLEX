@@ -41,7 +41,7 @@ class GitError(RuntimeError):
 
 class GitCore:
     def __init__(self, repo: Path, worktrees: Path) -> None:
-        self.repo, self.worktrees = Path(repo), Path(worktrees)
+        self.repo, self.worktrees = Path(repo).resolve(), Path(worktrees).resolve()
 
     def _git(self, *args: str, cwd: Path | None = None, agent: bool = True) -> str:
         sub = args[0] if args else ""
