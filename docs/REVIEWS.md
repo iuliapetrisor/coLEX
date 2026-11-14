@@ -22,3 +22,10 @@ One line per merged branch: branch, reviewer role, what was checked, result.
 - `feat/orchestrator/G0-ORC-01` · docs-only (D-010 condition 1), no Code Breaker pass required · checked: every pre-existing file is a 100% rename except the shared-rules README (the root `README` with §3b replaces the older `roles/README.md`); `slack_manifest.yaml` content and scopes unchanged; no secrets staged · merged.
 
 ## Findings
+
+[R-001] [Severity: Minor] [QA / test harness] [Code Breaker. Reviewer: same-session self-review (not independent)]
+Claim: The offline guard in `tests/conftest.py` leaves two DNS entry points open: `socket.gethostbyname_ex` and `socket.gethostbyaddr`. A test or library calling them sends a real DNS query during `make test`.
+Evidence: `tests/breaker/test_harness_network_block.py::test_all_dns_entry_points_are_blocked` (fails at a7f85ca when run with `--runxfail`: `Left contains 2 more items, first extra item: 'gethostbyname_ex'`).
+Proposed fix: block every name-resolution function of the `socket` module in the `_no_network` fixture, not only `getaddrinfo` and `gethostbyname`.
+Builder response: pending
+Orchestrator ruling: pending
