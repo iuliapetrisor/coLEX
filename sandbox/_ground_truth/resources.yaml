@@ -20,7 +20,7 @@ resources:
   - {uri: "intranet://hr/leave-policy.md", type: policy, path: "PayRo › People › HR policies › Leave and absence", owner: people, source: inferred}
   - {uri: "intranet://hr/office-rules.md", type: policy, path: "PayRo › People › Workplace › Office rules", owner: people, source: inferred}
   - {uri: "intranet://canteen-menu.md", type: page, path: null, owner: people, source: inferred}
-  - {uri: "repo://payments/transfer.py", type: code, path: "PayRo › Payments › Transfers › Verification of Payee", owner: payments-eng, source: explicit}
+  - {uri: "repo://payments/transfer.py", type: code, path: "PayRo › Payments › Transfers › Transfer authorisation", owner: payments-eng, source: explicit}
   - {uri: "repo://payments/fees.yaml", type: config, path: "PayRo › Technology & Security › Configuration › Pricing configuration", owner: product, source: explicit}
   - {uri: "repo://payments/fees.py", type: code, path: "PayRo › Payments › Fees & Pricing › Transfer fees", owner: payments-eng, source: explicit}
   - {uri: "repo://payments/incidents.py", type: code, path: "PayRo › Technology & Security › Incident management › Major incident reporting", owner: security, source: explicit}
