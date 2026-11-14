@@ -19,7 +19,7 @@ Every control below was reviewed only by the session that wrote it. There has be
 
 ## Known gaps
 
-- **The PayRo demo app (`make payro`) executes the code checked out in the sandbox repository.** After a human merges a coLEX branch, that includes model-written code. It runs in a subprocess with a scrubbed environment and no network, but file access is not sandboxed. It has no login and listens on 127.0.0.1 only. Use it on a demo machine.
+- **The PayRo demo app (`make payro`) executes the code checked out in the sandbox repository.** After a human merges a coLEX branch, that includes model-written code. It runs in a subprocess with a scrubbed environment and no network, but file access is not sandboxed. It has no login and listens on 127.0.0.1 only (ports 8001 and 8002). Its screens look like a real payment app and carry no "fictional" label (D-025): PayRo SRL, its customers, balances and payments are invented. Use it on a demo machine and say so when showing it.
 - **The Console has no login.** Anyone who can reach it can answer legal questions and approve changes as `console-user`. It listens on 127.0.0.1 only. Do not expose it.
 - Slack authorization was tested with a fake client, not in the real workspace. No approver is mapped in `config/colex.yaml`.
 - Redaction and injection detection are pattern-based and will miss cases outside their patterns.
